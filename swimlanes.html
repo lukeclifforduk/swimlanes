@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PXP Technology Roadmap Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1890ff;
+            --primary-hover: #40a9ff;
+            --success: #52c41a;
+            --success-hover: #73d13d;
+            --warning: #faad14;
+            --warning-hover: #ffc53d;
+            --error: #f5222d;
+            --error-hover: #ff4d4f;
+            --planned: #1890ff;
+            --planned-hover: #40a9ff;
+            --bg: #f0f2f5;
+            --card-bg: #ffffff;
+            --border: #d9d9d9;
+            --text: #000000d9; /* Ant Design text color */
+            --text-secondary: #00000073; /* Ant Design secondary text */
+            --shadow: 0 1px 4px rgba(0, 21, 41, 0.08); /* Softer shadow per Ant Design */
+            --shadow-hover: 0 2px 8px rgba(0, 21, 41, 0.08);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5715; /* Ant Design line height */
+            font-size: 14px; /* Base font size per Ant Design */
+        }
+
+        .header {
+            background: var(--card-bg);
+            padding: 16px 24px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 20px; /* Ant Design header size */
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px; /* Ant Design spacing */
+            flex-wrap: wrap;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .btn {
+            padding: 4px 15px; /* Ant Design button padding */
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            border-radius: 2px; /* Ant Design border radius */
+            cursor: pointer;
+            font-size: 14px;
+            height: 32px; /* Standard height */
+            transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1); /* Ant Design transition */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .btn:hover {
+            border-color: var(--primary-hover);
+            color: var(--primary-hover);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .search-box {
+            padding: 4px 11px;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            font-size: 14px;
+            height: 32px;
+            min-width: 200px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+
+        select {
+            padding: 4px 11px;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            font-size: 14px;
+            cursor: pointer;
+            background: var(--card-bg);
+            height: 32px;
+        }
+
+        .roadmap-container {
+            padding: 16px 24px; /* Consistent padding */
+            overflow-x: auto;
+        }
+
+        .timeline-header {
+            display: flex;
+            margin-bottom: 16px;
+            background: var(--card-bg);
+            padding: 8px 16px; /* Ant Design table header padding */
+            border-radius: 2px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 72px; /* Adjusted for header height */
+            z-index: 50;
+        }
+
+        .timeline-label {
+            flex: none;
+            width: auto;
+            font-weight: 500;
+            padding: 8px 16px;
+            position: relative;
+        }
+
+        .quarter-label {
+            flex: none;
+            width: auto;
+            font-weight: 500;
+            padding: 8px 16px;
+            text-align: center;
+            border-left: 1px solid var(--border);
+            position: relative;
+        }
+
+        .timeline-months {
+            display: flex;
+        }
+
+        .month-col {
+            flex: none;
+            width: auto;
+            text-align: center;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-left: 1px solid var(--border);
+            position: relative;
+        }
+
+        .swimlane {
+            background: var(--card-bg);
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.3s;
+        }
+
+        .swimlane:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .swimlane-header {
+            background: #fafafa;
+            padding: 8px 16px;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .swimlane-header:hover {
+            background: #f0f0f0;
+        }
+
+        .task-row {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s;
+        }
+
+        .task-row:hover {
+            background: #f6f6f6;
+        }
+
+        .task-row:last-child {
+            border-bottom: none;
+        }
+
+        .task-name {
+            flex: none;
+            width: auto;
+            padding-right: 16px;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .task-quarter {
+            flex: none;
+            width: auto;
+            padding: 4px 8px;
+            border-left: 1px solid var(--border);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .task-timeline {
+            display: flex;
+        }
+
+        .timeline-cell {
+            flex: none;
+            width: auto;
+            padding: 4px;
+            border-left: 1px solid var(--border);
+            position: relative;
+            min-height: 32px;
+            white-space: nowrap;
+        }
+
+        .timeline-marker {
+            background: var(--primary);
+            color: white;
+            padding: 0 8px;
+            border-radius: 2px;
+            font-size: 12px;
+            height: 24px;
+            line-height: 24px;
+            display: inline-flex;
+            align-items: center;
+            cursor: move;
+            user-select: none;
+            transition: all 0.3s;
+        }
+
+        .timeline-marker:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .timeline-marker.done {
+            background: var(--success);
+        }
+
+        .timeline-marker.done:hover {
+            background: var(--success-hover);
+        }
+
+        .timeline-marker.blocked {
+            background: var(--error);
+        }
+
+        .timeline-marker.blocked:hover {
+            background: var(--error-hover);
+        }
+
+        .timeline-marker.ongoing {
+            background: var(--warning);
+        }
+
+        .timeline-marker.ongoing:hover {
+            background: var(--warning-hover);
+        }
+
+        .timeline-marker.planned {
+            background: var(--planned);
+        }
+
+        .timeline-marker.planned:hover {
+            background: var(--planned-hover);
+        }
+
+        .collapsed .task-row {
+            display: none;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 2px;
+            max-width: 520px; /* Ant Design modal width */
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .modal-header {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 4px; /* Ant Design label margin */
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 4px 11px;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            font-size: 14px;
+            height: 32px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 64px;
+            height: auto;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 2px;
+            font-size: 12px;
+            height: 20px;
+            line-height: 20px;
+            background: #f0f0f0;
+            color: var(--text-secondary);
+        }
+
+        .badge-q3 { background: #e6f7ff; color: #1890ff; }
+        .badge-q4 { background: #fff7e6; color: #fa8c16; }
+        .badge-2026 { background: #f6ffed; color: #52c41a; }
+
+        .stats {
+            display: flex;
+            gap: 24px;
+            margin-top: 12px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .dragging {
+            opacity: 0.5;
+        }
+
+        .drop-target {
+            background: #e6f7ff;
+        }
+
+        .resize-handle {
+            position: absolute;
+            right: -2.5px;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            cursor: col-resize;
+            background: transparent;
+        }
+
+        .resize-handle:hover {
+            background: var(--primary);
+        }
+
+        /* Accessibility improvements */
+        [role="button"] {
+            cursor: pointer;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-header,
+            .timeline-months {
+                overflow-x: auto;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box,
+            select {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header" role="banner">
+        <h1>PXP Technology Roadmap Manager</h1>
+        <div class="controls">
+            <input type="text" class="search-box" id="searchBox" placeholder="Search tasks..." aria-label="Search tasks">
+            <select id="filterQuarter" aria-label="Filter by quarter">
+                <option value="">All Quarters</option>
+                <option value="Q3">Q3</option>
+                <option value="Q4">Q4</option>
+                <option value="Q4-26">Q4-26</option>
+                <option value="2026">2026</option>
+            </select>
+            <select id="filterStatus" aria-label="Filter by status">
+                <option value="">All Status</option>
+                <option value="Done">Done</option>
+                <option value="Ongoing">Ongoing</option>
+                <option value="Blocked">Blocked</option>
+                <option value="Planned">Planned</option>
+            </select>
+            <button class="btn btn-primary" id="addTaskBtn">+ Add Task</button>
+            <button class="btn" id="expandAllBtn">Expand All</button>
+            <button class="btn" id="collapseAllBtn">Collapse All</button>
+            <button class="btn" id="exportBtn">Export Data</button>
+            <button class="btn" id="importBtn">Import Data</button>
+            <input type="file" id="importFile" accept=".json" style="display: none;">
+        </div>
+        <div class="stats">
+            <span id="totalTasks">Total Tasks: 0</span>
+            <span id="completedTasks">Completed: 0</span>
+            <span id="ongoingTasks">Ongoing: 0</span>
+        </div>
+    </div>
+
+    <div class="roadmap-container" role="main">
+        <div class="timeline-header" role="row">
+            <div class="timeline-label" role="columnheader">Task / Feature</div>
+            <div class="quarter-label" role="columnheader">Quarter</div>
+            <div class="timeline-months" role="row">
+                <div class="month-col" role="columnheader">Jul</div>
+                <div class="month-col" role="columnheader">Aug</div>
+                <div class="month-col" role="columnheader">Sep</div>
+                <div class="month-col" role="columnheader">Oct</div>
+                <div class="month-col" role="columnheader">Nov</div>
+                <div class="month-col" role="columnheader">Dec</div>
+                <div class="month-col" role="columnheader">2026</div>
+            </div>
+        </div>
+        <div id="roadmapContent" role="table"></div>
+    </div>
+
+    <div class="modal" id="taskModal" role="dialog" aria-modal="true" aria-labelledby="modalHeader">
+        <div class="modal-content">
+            <div class="modal-header" id="modalHeader">Edit Task</div>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="taskName">Task Name</label>
+                    <input type="text" id="taskName" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="taskSwimlane">Swimlane</label>
+                    <input type="text" id="taskSwimlane" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="taskQuarter">Quarter</label>
+                    <input type="text" id="taskQuarter" placeholder="e.g., Q3, Q4, 2026">
+                </div>
+                <div class="form-group">
+                    <label for="taskTimeline">Timeline Markers (comma-separated months)</label>
+                    <input type="text" id="taskTimeline" placeholder="e.g., Jul, Aug, Sep">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" id="cancelBtn">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="deleteBtn" style="background: var(--error); border-color: var(--error);">Delete</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'pxp_roadmap_data';
+
+        let roadmapData = {
+            "PXP Technology - Unity": [
+                { name: "Unity Integration", quarter: "(Q4)", timeline: { Sep: "Done", Oct: "Planned", Nov: "Planned", Dec: "Planned", "2026": "Planned" } },
+                { name: "Initial Core Integration: MerchantGroup, Merchant, Sites & Basic Service", quarter: "(Q4)", timeline: { Oct: "Planned" } },
+                { name: "Related Product Procurement", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned" } },
+                { name: "Card Service, Moto & Acquiring Rates", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Related Product Setup (Token Vault etc)", quarter: "(Q4)", timeline: { Nov: "Planned", Dec: "Planned" } },
+                { name: "Automated POS Service Set Up (Serial Numbers, Purchase / Rental)", quarter: "Q4-26", timeline: { Dec: "Planned", "2026": "Planned" } },
+                { name: "Automated Gateway Fees, Cardservice Gateway & Basic Service Gateway Fees", quarter: "Q4-26", timeline: { Dec: "Planned", "2026": "Planned" } },
+                { name: "Completely automated activation of merchant, sites and services.", quarter: "2026", timeline: { "2026": "Planned" } }
+            ],
+            "Integrations – Beyond the Automated Underwriting and Fulfilment": [
+                { name: "Zendesk Integration", quarter: "(Q3)", timeline: { Aug: "Done", Sep: "Done" } },
+                { name: "Snowflake Integration", quarter: "(Q4)", timeline: { Sep: "Done", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "HubSpot Outbound Integration", quarter: "(Q3-4)", timeline: { Jul: "Blocked", Aug: "Blocked", Sep: "Done", Oct: "Planned" } },
+                { name: "London & Zurich", quarter: "(Q4)", timeline: { Sep: "Planned", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "NetSuite Integration", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned" } },
+                { name: "Unity MID and SUBMID Settlement Setup", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } }
+            ],
+            "Partner Enablement": [
+                { name: "Partner Branding (Logo, Portal, Invoices, Contracts etc)", quarter: "(Q3-4)", timeline: { Jul: "Done V1", Aug: "Done V2", Sep: "Done" } },
+                { name: "New Partner Accounts", quarter: "(Q3)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done" } },
+                { name: "Partner Analytics - Reporting, KPI's, Dashboards and Widgets", quarter: "(Q3)", timeline: { Jul: "Product", Aug: "Done", Sep: "Done", Oct: "Planned" } },
+                { name: "Partner Onboarding Questions", quarter: "(Q3)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done", Oct: "Planned", Nov: "Planned" } },
+                { name: "Partner Enablement – Partner Management Tools", quarter: "(Q3)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Commission Calculations", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Partner Automated Onboarding", quarter: "(Q3)", timeline: { Nov: "Planned", Dec: "Planned", "2026": "Planned" } },
+                { name: "Payfac Support – PFAC in a box", quarter: "(2026)", timeline: { "2026": "Planned" } },
+                { name: "PXP Partner Oversight & Controls", quarter: "(2026)", timeline: { "2026": "Planned" } }
+            ],
+            "Merchant Onboarding and Management": [
+                { name: "Merchant Accounts", quarter: "(Q3-4)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done", Oct: "Planned" } },
+                { name: "Automated Onboarding Enhancements", quarter: "(Q3-4)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done", Oct: "Planned" } },
+                { name: "Flow Builder Improvements", quarter: "(Q3)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done" } },
+                { name: "Contributor Roles for Merchant Accounts (self-onboard)", quarter: "(Q3-4)", timeline: { Aug: "Done", Sep: "Done", Oct: "Planned" } },
+                { name: "Application, Workflows and Fulfilment Progress Tracking", quarter: "(Q3-4)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done", Oct: "Planned" } },
+                { name: "External and Internal MerchantIDs", quarter: "(Q3)", timeline: { Sep: "Done" } },
+                { name: "In-Life Merchant Management", quarter: "(Q3-4)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Merchant Online Self-Onboarding", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Automated Merchant in-life Monitoring", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Self-Management Features (e.g., updating payment details, adding locations)", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Public-Facing Merchant Self-Onboarding", quarter: "(2026)", timeline: { "2026": "Planned" } },
+                { name: "Merchant Specific Packages and Tiers", quarter: "(2026)", timeline: { "2026": "Planned" } }
+            ],
+            "Product Management": [
+                { name: "Product Selection Screen Improvements (Attribute Driven, Merchant Fees)", quarter: "(Q3)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done" } },
+                { name: "Product Categories", quarter: "(Q3)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done" } },
+                { name: "Product Rentals", quarter: "(Q3)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done" } },
+                { name: "Dynamic Acquiring Rate Sheets", quarter: "(Q3)", timeline: { Aug: "Done", Sep: "Done" } },
+                { name: "Fees: Merchant, CardService, POS, ECOM etc", quarter: "(Q3)", timeline: { Aug: "Done", Sep: "Done" } },
+                { name: "Product Options, Nested Products & Product Addons", quarter: "(Q3-4)", timeline: { Aug: "Done", Sep: "Done", Oct: "Planned", Nov: "Planned" } },
+                { name: "Dynamic Product Filtering and Product Selection", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Product-Focused Data Insights", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Product Estate Management (Filtering, Grouping, Sorting, Applying Mass Changes)", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Solution Ecosystem Products Ranges", quarter: "(2026)", timeline: { "2026": "Planned" } },
+                { name: "Loyalty Programmes", quarter: "(2026)", timeline: { "2026": "Planned" } },
+                { name: "Intelligent Offerings with Upsell Prompts", quarter: "(2026)", timeline: { "2026": "Planned" } }
+            ],
+            "Automation and Workflows": [
+                { name: "Automated Underwriting enhancements", quarter: "(Q3)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done" } },
+                { name: "Automated Contract Generation Overhaul and Redesign", quarter: "(Q3)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done" } },
+                { name: "Fulfillment Endpoints Handling / Workflows Expansion", quarter: "(Q3)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done" } },
+                { name: "Automated Business Documents", quarter: "(Q3)", timeline: { Aug: "Done", Sep: "Done" } },
+                { name: "Product to Site Assignment", quarter: "", timeline: { Sep: "Done", Oct: "Done" } },
+                { name: "Questions targetting MCC's", quarter: "(Q3-4)", timeline: { Sep: "Done", Oct: "Planned" } },
+                { name: "Customer and Operational Email Automation", quarter: "(Q3-4)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Direct Debit - Automated", quarter: "(Q4)", timeline: { Nov: "Planned", Dec: "Planned" } }
+            ],
+            "Compliance and Security": [
+                { name: "IVR Screening Improvements", quarter: "(Q3)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done" } },
+                { name: "Enhanced Decisioning", quarter: "(Q3-4)", timeline: { Jul: "Done v1", Aug: "Done v1", Sep: "Done v1", Oct: "Planned", Nov: "Planned" } },
+                { name: "PCI Compliance Features", quarter: "(Q3-4)", timeline: { Aug: "Done", Sep: "Done", Oct: "Planned", Nov: "Planned" } },
+                { name: "Transaction Screening Products", quarter: "(Q3-4)", timeline: { Aug: "Done", Sep: "Done", Oct: "Planned", Nov: "Planned" } },
+                { name: "Dispute Management Products", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Automated PCI DCSS Forms", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Audit Logs and Permission Setting Management", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Integrating with and implementing compliance tools (GRPR CCPA)", quarter: "(2026)", timeline: { "2026": "Planned" } }
+            ],
+            "Data and Analytics": [
+                { name: "Portal Boarding Data, Reporting, Analytics, and KPIs", quarter: "(Q3-4)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Overall Customer Portfolio Data", quarter: "(Q3-4)", timeline: { Aug: "Done", Sep: "Done", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Real-Time Portfolio Data", quarter: "(Q3-4)", timeline: { Aug: "Done", Sep: "Done", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Auditing And Event Time-stamps", quarter: "(Q3-4)", timeline: { Sep: "Done", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Estate Management and Monitoring Tools", quarter: "(Q4)", timeline: { Nov: "Planned", Dec: "Planned", "2026": "Planned" } },
+                { name: "Bulk Reports by Region or Partner", quarter: "(Q4)", timeline: { Dec: "Planned", "2026": "Planned" } },
+                { name: "Exportable Reports", quarter: "(Q4)", timeline: { "2026": "Planned" } }
+            ],
+            "Accounts and Access": [
+                { name: "Acquirer Accounts – Products, Flows and Rules", quarter: "(Q3-4)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done", Oct: "Planned" } },
+                { name: "Referral Accounts (& Partner Referrers)", quarter: "(Q3-4)", timeline: { Aug: "Done", Sep: "Done", Oct: "Planned" } },
+                { name: "Extended User Roles", quarter: "(Q3)", timeline: { Sep: "Done", Oct: "Planned" } },
+                { name: "Commission on Sales Roles", quarter: "(Q4)", timeline: { Sep: "Done", Oct: "Planned", Nov: "Planned" } },
+                { name: "Payment Service Controls for Global Admins", quarter: "(Q4)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Unity Controls for Global Admins", quarter: "(Q3)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "PFAC Partner Accounts", quarter: "(Q4)", timeline: { Dec: "Planned", "2026": "Planned" } }
+            ],
+            "UI/UX": [
+                { name: "Dark Mode, Colour Pallets, CSS Overhaul", quarter: "(Q3)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done", Oct: "Planned" } },
+                { name: "Portal UI Redesign", quarter: "(Q4)", timeline: { Nov: "Planned", Dec: "Planned" } }
+            ],
+            "Product Enablement": [
+                { name: "Castles S1F2", quarter: "(Q3)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done" } },
+                { name: "Castles S1F4", quarter: "(Q4)", timeline: { Aug: "Done", Sep: "Done", Oct: "Planned" } },
+                { name: "ECOM", quarter: "(Q3)", timeline: { Jul: "Done", Aug: "Done", Sep: "Done", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "PXP Checkout Components: Web, Paypal, Gpay, Applypay", quarter: "(Q3)", timeline: { Aug: "Done", Sep: "Done", Oct: "Planned" } },
+                { name: "PayPal via Components", quarter: "(Q4)", timeline: { Sep: "Done", Oct: "Planned" } },
+                { name: "PXP Plugins (Gateway)", quarter: "(Q3)", timeline: { Sep: "Done", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Token Vault", quarter: "(Q3)", timeline: { Aug: "Planned", Sep: "Products", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "3DS", quarter: "(Q3)", timeline: { Aug: "Planned", Sep: "Products", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Tap+", quarter: "(Q3)", timeline: { Aug: "Planned", Sep: "Products", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "ePOS Solutions", quarter: "(Q4)", timeline: { Aug: "Done", Sep: "Done", Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Terminal Financing", quarter: "(Q3)", timeline: { Sep: "Done", Oct: "Planned" } },
+                { name: "PayByLink", quarter: "(Q4)", timeline: { Sep: "Done", Oct: "Planned", Nov: "Planned" } },
+                { name: "PCI Compliance", quarter: "(Q3)", timeline: { Sep: "Done", Oct: "Planned", Nov: "Planned" } },
+                { name: "Transaction Screening", quarter: "(Q4)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "Virtual Terminal", quarter: "(Q3)", timeline: { Oct: "Planned", Nov: "Planned", Dec: "Planned" } },
+                { name: "American Express Integration", quarter: "(Q4)", timeline: { Dec: "Planned" } },
+                { name: "Smart Routing", quarter: "(Q4)", timeline: { Dec: "Planned", "2026": "Planned" } }
+            ],
+            "Inbound API": [
+                { name: "Initial -> /Lead API (HubSpot Inbound API)", quarter: "(2026)", timeline: { "2026": "Planned" } },
+                { name: "Complete, public facing API Inbound API", quarter: "(2026)", timeline: { "2026": "Planned" } },
+                { name: "/Submission API", quarter: "(2026)", timeline: { "2026": "Planned" } }
+            ],
+            "Complete Portal White-Labelling": [
+                { name: "For-Acquirer-White-Labelling", quarter: "(2026)", timeline: { "2026": "Planned" } }
+            ],
+            "Regional Expansion": [
+                { name: "Regional Expansion (Passporting)", quarter: "(2026)", timeline: { "2026": "Planned" } },
+                { name: "Localised Languages, Currencies, and Tax Rules", quarter: "(2026)", timeline: { "2026": "Planned" } }
+            ]
+        };
+
+        let currentEditTask = null;
+        let currentEditSwimlane = null;
+
+        const months = ["Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "2026"];
+
+        function loadData() {
+            const savedData = localStorage.getItem(STORAGE_KEY);
+            if (savedData) {
+                roadmapData = JSON.parse(savedData);
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(roadmapData));
+        }
+
+        function renderRoadmap() {
+            const container = document.getElementById('roadmapContent');
+            container.innerHTML = '';
+
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const filterQuarter = document.getElementById('filterQuarter').value;
+            const filterStatus = document.getElementById('filterStatus').value;
+
+            let totalTasks = 0;
+            let completedTasks = 0;
+            let ongoingTasks = 0;
+
+            for (const [swimlane, tasks] of Object.entries(roadmapData)) {
+                const filteredTasks = tasks.filter(task => {
+                    const matchesSearch = task.name.toLowerCase().includes(searchTerm) || 
+                                          swimlane.toLowerCase().includes(searchTerm);
+                    const matchesQuarter = !filterQuarter || task.quarter.includes(filterQuarter);
+                    
+                    let matchesStatus = !filterStatus;
+                    if (filterStatus) {
+                        const statuses = Object.values(task.timeline || {});
+                        if (filterStatus === "Done") {
+                            matchesStatus = statuses.some(s => s && s.toLowerCase().includes("done"));
+                        } else if (filterStatus === "Ongoing") {
+                            matchesStatus = statuses.some(s => s && s.toLowerCase() === "ongoing");
+                        } else if (filterStatus === "Blocked") {
+                            matchesStatus = statuses.some(s => s && s.toLowerCase() === "blocked");
+                        } else if (filterStatus === "Planned") {
+                            matchesStatus = statuses.some(s => s && s.toLowerCase() === "planned");
+                        }
+                    }
+                    
+                    return matchesSearch && matchesQuarter && matchesStatus;
+                });
+
+                if (filteredTasks.length === 0) continue;
+
+                totalTasks += filteredTasks.length;
+
+                const swimlaneDiv = document.createElement('div');
+                swimlaneDiv.className = 'swimlane';
+                swimlaneDiv.setAttribute('role', 'rowgroup');
+                
+                const header = document.createElement('div');
+                header.className = 'swimlane-header';
+                header.innerHTML = `
+                    <span>${swimlane}</span>
+                    <span class="toggle-icon">▼</span>
+                `;
+                header.onclick = () => swimlaneDiv.classList.toggle('collapsed');
+                header.setAttribute('tabindex', '0');
+                header.setAttribute('role', 'button');
+                header.onkeydown = (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        swimlaneDiv.classList.toggle('collapsed');
+                    }
+                };
+                swimlaneDiv.appendChild(header);
+
+                filteredTasks.forEach(task => {
+                    const statuses = Object.values(task.timeline || {});
+                    if (statuses.some(s => s && s.toLowerCase().includes("done"))) completedTasks++;
+                    if (statuses.some(s => s && s.toLowerCase() === "ongoing")) ongoingTasks++;
+
+                    const row = document.createElement('div');
+                    row.className = 'task-row';
+                    row.setAttribute('role', 'row');
+                    
+                    const nameDiv = document.createElement('div');
+                    nameDiv.className = 'task-name';
+                    nameDiv.textContent = task.name;
+                    nameDiv.dataset.column = '0';
+                    nameDiv.onclick = () => openEditModal(task, swimlane);
+                    nameDiv.setAttribute('tabindex', '0');
+                    nameDiv.setAttribute('role', 'button');
+                    nameDiv.onkeydown = (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') openEditModal(task, swimlane);
+                    };
+                    row.appendChild(nameDiv);
+
+                    const quarterDiv = document.createElement('div');
+                    quarterDiv.className = 'task-quarter';
+                    quarterDiv.dataset.column = '1';
+                    if (task.quarter) {
+                        const badge = document.createElement('span');
+                        badge.className = `badge badge-${getQuarterClass(task.quarter)}`;
+                        badge.textContent = task.quarter;
+                        quarterDiv.appendChild(badge);
+                    }
+                    row.appendChild(quarterDiv);
+
+                    const timeline = document.createElement('div');
+                    timeline.className = 'task-timeline';
+                    
+                    months.forEach((month, i) => {
+                        const cell = document.createElement('div');
+                        cell.className = 'timeline-cell';
+                        cell.dataset.month = month;
+                        cell.dataset.column = `${i + 2}`;
+                        cell.setAttribute('role', 'cell');
+                        
+                        const value = task.timeline?.[month];
+                        if (value) {
+                            const marker = document.createElement('div');
+                            marker.className = `timeline-marker ${value.toLowerCase()}`;
+                            marker.textContent = value;
+                            marker.draggable = true;
+                            
+                            marker.ondragstart = (e) => {
+                                e.dataTransfer.setData('text/plain', JSON.stringify({
+                                    swimlane,
+                                    taskName: task.name,
+                                    fromMonth: month
+                                }));
+                                marker.classList.add('dragging');
+                            };
+                            
+                            marker.ondragend = () => marker.classList.remove('dragging');
+                            
+                            cell.appendChild(marker);
+                        }
+                        
+                        cell.ondragover = (e) => {
+                            e.preventDefault();
+                            cell.classList.add('drop-target');
+                        };
+                        
+                        cell.ondragleave = () => cell.classList.remove('drop-target');
+                        
+                        cell.ondrop = (e) => {
+                            e.preventDefault();
+                            cell.classList.remove('drop-target');
+                            
+                            const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                            const toMonth = cell.dataset.month;
+                            
+                            if (data.swimlane === swimlane && data.taskName === task.name) {
+                                const value = task.timeline[data.fromMonth];
+                                delete task.timeline[data.fromMonth];
+                                task.timeline[toMonth] = value;
+                                saveData();
+                                renderRoadmap();
+                            }
+                        };
+                        
+                        timeline.appendChild(cell);
+                    });
+                    
+                    row.appendChild(timeline);
+                    swimlaneDiv.appendChild(row);
+                });
+
+                container.appendChild(swimlaneDiv);
+            }
+
+            document.getElementById('totalTasks').textContent = `Total Tasks: ${totalTasks}`;
+            document.getElementById('completedTasks').textContent = `Completed: ${completedTasks}`;
+            document.getElementById('ongoingTasks').textContent = `Ongoing: ${ongoingTasks}`;
+
+            setupHeadersAndResizers();
+            autoSizeColumns();
+        }
+
+        function setupHeadersAndResizers() {
+            const timelineLabel = document.querySelector('.timeline-label');
+            timelineLabel.dataset.column = '0';
+
+            const quarterLabel = document.querySelector('.quarter-label');
+            quarterLabel.dataset.column = '1';
+
+            const monthCols = document.querySelectorAll('.month-col');
+            monthCols.forEach((col, i) => {
+                col.dataset.column = `${i + 2}`;
+            });
+
+            const headerCells = [timelineLabel, quarterLabel, ...monthCols];
+
+            headerCells.slice(0, -1).forEach(cell => {
+                const handle = document.createElement('div');
+                handle.className = 'resize-handle';
+                cell.appendChild(handle);
+                handle.addEventListener('mousedown', startResize);
+            });
+        }
+
+        function startResize(e) {
+            e.preventDefault();
+            const column = e.target.parentNode.dataset.column;
+            const initialX = e.clientX;
+            const cells = document.querySelectorAll(`[data-column="${column}"]`);
+            const initialWidth = cells[0].offsetWidth;
+
+            function onMove(em) {
+                const delta = em.clientX - initialX;
+                const newWidth = Math.max(50, initialWidth + delta);
+                cells.forEach(c => c.style.width = `${newWidth}px`);
+            }
+
+            function onUp() {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            }
+
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        }
+
+        function autoSizeColumns() {
+            for (let col = 0; col < 9; col++) {
+                const cells = document.querySelectorAll(`[data-column="${col}"]`);
+                if (cells.length === 0) continue;
+                let maxWidth = 0;
+                cells.forEach(cell => {
+                    const width = getContentWidth(cell);
+                    if (width > maxWidth) maxWidth = width;
+                });
+                cells.forEach(cell => cell.style.width = `${maxWidth}px`);
+            }
+        }
+
+        function getContentWidth(el) {
+            const clone = el.cloneNode(true);
+            clone.style.position = 'absolute';
+            clone.style.visibility = 'hidden';
+            clone.style.width = 'auto';
+            clone.style.maxWidth = 'none';
+            clone.style.whiteSpace = 'nowrap';
+            document.body.appendChild(clone);
+            const width = clone.offsetWidth + 32; // extra padding
+            document.body.removeChild(clone);
+            return width;
+        }
+
+        function getQuarterClass(quarter) {
+            if (quarter.includes('Q3')) return 'q3';
+            if (quarter.includes('Q4')) return 'q4';
+            if (quarter.includes('2026')) return '2026';
+            return 'q4';
+        }
+
+        function openEditModal(task, swimlane) {
+            currentEditTask = task;
+            currentEditSwimlane = swimlane;
+            
+            document.getElementById('taskName').value = task.name;
+            document.getElementById('taskSwimlane').value = swimlane;
+            document.getElementById('taskQuarter').value = task.quarter;
+            
+            const timelineMonths = Object.keys(task.timeline || {}).filter(month => task.timeline[month]);
+            document.getElementById('taskTimeline').value = timelineMonths.join(', ');
+            
+            document.getElementById('taskModal').classList.add('active');
+            document.getElementById('taskName').focus();
+        }
+
+        function closeModal() {
+            document.getElementById('taskModal').classList.remove('active');
+            currentEditTask = null;
+            currentEditSwimlane = null;
+        }
+
+        document.getElementById('taskForm').onsubmit = (e) => {
+            e.preventDefault();
+            
+            const newName = document.getElementById('taskName').value.trim();
+            const newSwimlane = document.getElementById('taskSwimlane').value.trim();
+            const newQuarter = document.getElementById('taskQuarter').value.trim();
+            const timelineStr = document.getElementById('taskTimeline').value.trim();
+            
+            if (currentEditTask && currentEditSwimlane) {
+                currentEditTask.name = newName;
+                currentEditTask.quarter = newQuarter;
+                
+                const newTimeline = {};
+                if (timelineStr) {
+                    const monthsList = timelineStr.split(',').map(m => m.trim()).filter(m => months.includes(m));
+                    monthsList.forEach(month => {
+                        newTimeline[month] = currentEditTask.timeline?.[month] || 'Planned';
+                    });
+                }
+                currentEditTask.timeline = newTimeline;
+                
+                if (newSwimlane !== currentEditSwimlane) {
+                    const oldTasks = roadmapData[currentEditSwimlane];
+                    const index = oldTasks.indexOf(currentEditTask);
+                    if (index > -1) oldTasks.splice(index, 1);
+                    
+                    if (!roadmapData[newSwimlane]) roadmapData[newSwimlane] = [];
+                    roadmapData[newSwimlane].push(currentEditTask);
+                }
+                
+                saveData();
+            }
+            
+            closeModal();
+            renderRoadmap();
+        };
+
+        document.getElementById('cancelBtn').onclick = closeModal;
+
+        document.getElementById('deleteBtn').onclick = () => {
+            if (currentEditTask && currentEditSwimlane && confirm('Are you sure you want to delete this task?')) {
+                const tasks = roadmapData[currentEditSwimlane];
+                const index = tasks.indexOf(currentEditTask);
+                if (index > -1) tasks.splice(index, 1);
+                if (tasks.length === 0) delete roadmapData[currentEditSwimlane];
+                saveData();
+                closeModal();
+                renderRoadmap();
+            }
+        };
+
+        document.getElementById('addTaskBtn').onclick = () => {
+            const swimlane = prompt('Enter swimlane name:').trim();
+            if (!swimlane) return;
+            
+            const taskName = prompt('Enter task name:').trim();
+            if (!taskName) return;
+            
+            const newTask = {
+                name: taskName,
+                quarter: '',
+                timeline: {}
+            };
+            
+            if (!roadmapData[swimlane]) roadmapData[swimlane] = [];
+            roadmapData[swimlane].push(newTask);
+            saveData();
+            renderRoadmap();
+        };
+
+        document.getElementById('expandAllBtn').onclick = () => {
+            document.querySelectorAll('.swimlane').forEach(sl => sl.classList.remove('collapsed'));
+        };
+
+        document.getElementById('collapseAllBtn').onclick = () => {
+            document.querySelectorAll('.swimlane').forEach(sl => sl.classList.add('collapsed'));
+        };
+
+        document.getElementById('exportBtn').onclick = () => {
+            const dataStr = JSON.stringify(roadmapData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'roadmap-data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        document.getElementById('importBtn').onclick = () => {
+            document.getElementById('importFile').click();
+        };
+
+        document.getElementById('importFile').onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    roadmapData = JSON.parse(event.target.result);
+                    saveData();
+                    renderRoadmap();
+                    alert('Data imported successfully!');
+                } catch (err) {
+                    alert('Invalid JSON file.');
+                }
+            };
+            reader.readAsText(file);
+        };
+
+        document.getElementById('searchBox').oninput = renderRoadmap;
+        document.getElementById('filterQuarter').onchange = renderRoadmap;
+        document.getElementById('filterStatus').onchange = renderRoadmap;
+
+        document.getElementById('taskModal').onclick = (e) => {
+            if (e.target.id === 'taskModal') closeModal();
+        };
+
+        // Initial load and render
+        loadData();
+        renderRoadmap();
+    </script>
+</body>
+</html>

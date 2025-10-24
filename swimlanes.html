@@ -168,6 +168,17 @@
             position: relative;
         }
 
+        .tags-palette {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            box-shadow: var(--shadow);
+        }
+
         .swimlane {
             background: var(--card-bg);
             margin-bottom: 16px;
@@ -485,6 +496,12 @@
             <span id="totalTasks">Total Tasks: 0</span>
             <span id="completedTasks">Completed: 0</span>
             <span id="ongoingTasks">Ongoing: 0</span>
+        </div>
+        <div class="tags-palette">
+            <div class="timeline-marker done" draggable="true">Done</div>
+            <div class="timeline-marker ongoing" draggable="true">Ongoing</div>
+            <div class="timeline-marker blocked" draggable="true">Blocked</div>
+            <div class="timeline-marker planned" draggable="true">Planned</div>
         </div>
     </div>
 
@@ -819,15 +836,29 @@
                             e.preventDefault();
                             cell.classList.remove('drop-target');
                             
-                            const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                            const dataStr = e.dataTransfer.getData('text/plain');
+                            if (!dataStr) return;
+                            let data;
+                            try {
+                                data = JSON.parse(dataStr);
+                            } catch (err) {
+                                return;
+                            }
+                            
                             const toMonth = cell.dataset.month;
                             
-                            if (data.swimlane === swimlane && data.taskName === task.name) {
-                                const value = task.timeline[data.fromMonth];
-                                delete task.timeline[data.fromMonth];
-                                task.timeline[toMonth] = value;
+                            if (data.newStatus) {
+                                task.timeline[toMonth] = data.newStatus;
                                 saveData();
                                 renderRoadmap();
+                            } else if (data.swimlane === swimlane && data.taskName === task.name && data.fromMonth) {
+                                if (data.fromMonth !== toMonth) {
+                                    const value = task.timeline[data.fromMonth];
+                                    delete task.timeline[data.fromMonth];
+                                    task.timeline[toMonth] = value;
+                                    saveData();
+                                    renderRoadmap();
+                                }
                             }
                         };
                         
@@ -1066,8 +1097,19 @@
             if (e.target.id === 'taskModal') closeModal();
         };
 
+        function setupTagPalette() {
+            const tags = document.querySelectorAll('.tags-palette .timeline-marker');
+            tags.forEach(tag => {
+                tag.ondragstart = (e) => {
+                    e.dataTransfer.setData('text/plain', JSON.stringify({ newStatus: tag.textContent }));
+                    e.dataTransfer.effectAllowed = 'copy';
+                };
+            });
+        }
+
         // Initial load and render
         loadData();
+        setupTagPalette();
         renderRoadmap();
     </script>
 </body>

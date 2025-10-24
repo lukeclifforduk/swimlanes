@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hertford Payments - Modern Payment Solutions for UK SMEs</title>
+    <style>
+        :root {
+            --primary-blue: #1E3A8A;
+            --light-blue: #3B82F6;
+            --charcoal: #1F2937;
+            --sand: #F5E8C7;
+            --white: #FFFFFF;
+            --gray: #D1D5DB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--charcoal);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--charcoal) 100%);
+            color: var(--white);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--sand);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(45deg, var(--primary-blue), var(--light-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://source.unsplash.com/random/1920x1080/?payment,technology');
+            opacity: 0.2;
+            z-index: 0;
+        }
+
+        .hero-content {
+            z-index: 1;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            background: var(--sand);
+            color: var(--charcoal);
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--charcoal);
+            text-align: center;
+        }
+
+        /* Parallax Section */
+        .parallax {
+            background: url('https://source.unsplash.com/random/1920x1080/?fintech') no-repeat center center;
+            background-attachment: fixed;
+            background-size: cover;
+            padding: 8rem 2rem;
+            color: var(--white);
+            text-align: center;
+            position: relative;
+        }
+
+        .parallax::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+
+        .parallax-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sideways Scroll */
+        .sideways-scroll {
+            display: flex;
+            overflow-x: auto;
+            padding: 2rem 0;
+            gap: 2rem;
+            background: var(--sand);
+        }
+
+        .card {
+            flex: 0 0 300px;
+            background: var(--white);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 1rem;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--white);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .comparison-table th {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        /* Quote Scroll */
+        .quote-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 2rem;
+            padding: 2rem 0;
+            background: var(--charcoal);
+            color: var(--white);
+        }
+
+        .quote {
+            flex: 0 0 300px;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        /* Technology Section */
+        .technology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--charcoal);
+            color: var(--white);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--sand);
+            text-decoration: none;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Hertford Payments</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#solutions">Solutions</a>
+                <a href="#technology">Technology</a>
+                <a href="#rates">Rates</a>
+                <a href="#partner">Partner</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Modern Payment Solutions for UK Small Businesses</h1>
+            <p>Empowering SMEs, sole traders, and local businesses with seamless POS, ECOM, and payment gateway solutions.</p>
+            <a href="#contact" class="cta-button">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Solutions Section -->
+    <section id="solutions">
+        <h2 class="section-title">Our Payment Solutions</h2>
+        <div class="sideways-scroll">
+            <div class="card">
+                <img src="https://via.placeholder.com/100?text=POS" alt="POS Icon">
+                <h3>POS</h3>
+                <p>Streamlined point-of-sale solutions with terminals like the Castles S1F2, designed for retail and hospitality.</p>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/100?text=POS+" alt="POS+ Icon">
+                <h3>POS+</h3>
+                <p>Advanced POS systems with integrated analytics and inventory management for growing businesses.</p>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/100?text=ECOM" alt="ECOM Icon">
+                <h3>ECOM</h3>
+                <p>Secure e-commerce gateways compatible with Magento, offering seamless online payment experiences.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parallax Section -->
+    <section class="parallax">
+        <div class="parallax-content">
+            <h2>Why Choose Hertford Payments?</h2>
+            <p>Trusted by thousands of UK SMEs for reliable, secure, and innovative payment solutions tailored to your needs.</p>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section id="technology">
+        <h2 class="section-title">Cutting-Edge Technology</h2>
+        <div class="technology-grid">
+            <div class="card">
+                <h3>BIN Lookup</h3>
+                <p>Instantly verify card details to enhance transaction security and reduce fraud.</p>
+            </div>
+            <div class="card">
+                <h3>Token Vault</h3>
+                <p>Securely store payment data for faster checkouts and recurring payments.</p>
+            </div>
+            <div class="card">
+                <h3>3D Secure</h3>
+                <p>Advanced authentication for safer online transactions, protecting both merchants and customers.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rates Section -->
+    <section id="rates">
+        <h2 class="section-title">Acquiring Rates</h2>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Plan</th>
+                    <th>Transaction Fee</th>
+                    <th>Monthly Fee</th>
+                    <th>Features</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Starter</td>
+                    <td>1.9% + 20p</td>
+                    <td>£20</td>
+                    <td>POS, Basic Reporting</td>
+                </tr>
+                <tr>
+                    <td>Pro</td>
+                    <td>1.7% + 20p</td>
+                    <td>£50</td>
+                    <td>POS+, ECOM, Analytics</td>
+                </tr>
+                <tr>
+                    <td>Enterprise</td>
+                    <td>1.5% + 20p</td>
+                    <td>Custom</td>
+                    <td>Full Suite, Dedicated Support</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Partner Section -->
+    <section id="partner">
+        <h2 class="section-title">Partner With Us</h2>
+        <p>Join our referral program and earn competitive kickbacks by introducing businesses to Hertford Payments.</p>
+        <a href="#contact" class="cta-button">Become a Partner</a>
+    </section>
+
+    <!-- Quote Scroll Section -->
+    <section>
+        <h2 class="section-title">What Our Customers Say</h2>
+        <div class="quote-scroll">
+            <div class="quote">
+                <p>"Hertford Payments transformed our checkout process, making it faster and more secure!"</p>
+                <p><strong>Jane, Retail Owner</strong></p>
+            </div>
+            <div class="quote">
+                <p>"The POS+ system is a game-changer for our restaurant. Highly recommend!"</p>
+                <p><strong>Mike, Restaurant Manager</strong></p>
+            </div>
+            <div class="quote">
+                <p>"Their e-commerce gateway integrates perfectly with our Magento store."</p>
+                <p><strong>Sarah, Online Retailer</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <h2 class="section-title">About Hertford Payments</h2>
+        <p>We are a UK-based fintech dedicated to empowering small businesses, sole traders, and local merchants with modern, secure, and easy-to-use payment solutions. From POS terminals to e-commerce gateways, we provide everything you need to succeed.</p>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <h2 class="section-title">Get in Touch</h2>
+        <p>Email: support@hertfordpayments.co.uk<br>Phone: 020 1234 5678<br>Address: 123 High Street, Hertford, SG14 1AA</p>
+        <a href="mailto:support@hertfordpayments.co.uk" class="cta-button">Contact Us</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Hertford Payments. All rights reserved. <a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a></p>
+    </footer>
+
+    <script>
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Parallax Effect
+        window.addEventListener('scroll', function() {
+            const parallax = document.querySelector('.parallax');
+            let scrollPosition = window.pageYOffset;
+            parallax.style.backgroundPositionY = scrollPosition * 0.5 + 'px';
+        });
+    </script>
+</body>
+</html>

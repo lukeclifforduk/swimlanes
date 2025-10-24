@@ -74,6 +74,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            position: relative;
         }
 
         .header h1 {
@@ -542,6 +543,70 @@
                 min-width: auto;
             }
         }
+
+        /* Switch Styles */
+        .header-toggle {
+            position: absolute;
+            top: 16px;
+            right: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-label {
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        body.dark-mode .slider {
+            background-color: #666;
+        }
     </style>
 </head>
 <body>
@@ -568,7 +633,6 @@
             <button class="btn" id="collapseAllBtn">Collapse All</button>
             <button class="btn" id="exportBtn">Export Data</button>
             <button class="btn" id="importBtn">Import Data</button>
-            <button class="btn" id="toggleMode">Dark Mode</button>
             <input type="file" id="importFile" accept=".json" style="display: none;">
         </div>
         <div class="stats">
@@ -581,6 +645,13 @@
             <div class="timeline-marker ongoing" draggable="true">Ongoing</div>
             <div class="timeline-marker blocked" draggable="true">Blocked</div>
             <div class="timeline-marker planned" draggable="true">Planned</div>
+        </div>
+        <div class="header-toggle">
+            <span class="toggle-label">Dark Mode</span>
+            <label class="switch">
+                <input type="checkbox" id="darkModeSwitch">
+                <span class="slider"></span>
+            </label>
         </div>
     </div>
 
@@ -779,10 +850,8 @@
                 roadmapData = JSON.parse(savedData);
             }
             const darkMode = localStorage.getItem(DARK_MODE_KEY) === 'true';
-            if (darkMode) {
-                document.body.classList.add('dark-mode');
-            }
-            document.getElementById('toggleMode').textContent = darkMode ? 'Light Mode' : 'Dark Mode';
+            document.body.classList.toggle('dark-mode', darkMode);
+            document.getElementById('darkModeSwitch').checked = darkMode;
         }
 
         function saveData() {
@@ -1257,12 +1326,10 @@
             if (e.target.id === 'taskModal') closeModal();
         };
 
-        document.getElementById('toggleMode').onclick = () => {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem(DARK_MODE_KEY, isDark);
-            document.getElementById('toggleMode').textContent = isDark ? 'Light Mode' : 'Dark Mode';
-        };
+        document.getElementById('darkModeSwitch').addEventListener('change', (e) => {
+            document.body.classList.toggle('dark-mode', e.target.checked);
+            localStorage.setItem(DARK_MODE_KEY, e.target.checked);
+        });
 
         function setupTagPalette() {
             const tags = document.querySelectorAll('.tags-palette .timeline-marker');

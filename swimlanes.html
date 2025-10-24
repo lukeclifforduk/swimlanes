@@ -163,6 +163,11 @@
             z-index: 50;
         }
 
+        .handle-col {
+            flex: none;
+            width: 32px;
+        }
+
         .timeline-label {
             flex: none;
             width: auto;
@@ -260,6 +265,16 @@
 
         .task-row:last-child {
             border-bottom: none;
+        }
+
+        .drag-handle {
+            flex: none;
+            width: 32px;
+            text-align: center;
+            cursor: move;
+            user-select: none;
+            font-size: 16px;
+            align-self: center;
         }
 
         .task-name {
@@ -563,6 +578,7 @@
 
     <div class="roadmap-container" role="main">
         <div class="timeline-header" role="row">
+            <div class="handle-col"></div>
             <div class="timeline-label" role="columnheader">Task / Feature</div>
             <div class="quarter-label" role="columnheader">Quarter</div>
             <div class="timeline-months" role="row">
@@ -832,17 +848,6 @@
                     const row = document.createElement('div');
                     row.className = 'task-row';
                     row.setAttribute('role', 'row');
-                    row.draggable = true;
-                    
-                    row.ondragstart = (e) => {
-                        e.dataTransfer.setData('text/plain', JSON.stringify({
-                            swimlane,
-                            taskName: task.name
-                        }));
-                        row.classList.add('dragging');
-                    };
-                    
-                    row.ondragend = () => row.classList.remove('dragging');
                     
                     row.ondragover = (e) => {
                         e.preventDefault();
@@ -861,6 +866,10 @@
                         try {
                             data = JSON.parse(dataStr);
                         } catch (err) {
+                            return;
+                        }
+                        
+                        if (data.fromMonth !== undefined || data.newStatus) {
                             return;
                         }
                         
@@ -884,6 +893,19 @@
                             renderRoadmap();
                         }
                     };
+                    
+                    const dragHandle = document.createElement('div');
+                    dragHandle.className = 'drag-handle';
+                    dragHandle.textContent = '⋮';
+                    dragHandle.ondragstart = (e) => {
+                        e.dataTransfer.setData('text/plain', JSON.stringify({
+                            swimlane,
+                            taskName: task.name
+                        }));
+                        row.classList.add('dragging');
+                    };
+                    dragHandle.ondragend = () => row.classList.remove('dragging');
+                    row.appendChild(dragHandle);
                     
                     const nameDiv = document.createElement('div');
                     nameDiv.className = 'task-name';

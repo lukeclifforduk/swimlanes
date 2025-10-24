@@ -4,261 +4,465 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hertford Payments - Modern Payment Solutions for UK SMEs</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
     <style>
         :root {
-            --primary-blue: #1E3A8A;
-            --light-blue: #3B82F6;
-            --charcoal: #1F2937;
-            --sand: #F5E8C7;
+            --primary-blue: #0D47A1;
+            --light-blue: #2196F3;
+            --charcoal: #121212; /* Increased usage */
+            --dark-gray: #1E1E1E;
+            --medium-gray: #333333;
+            --light-gray: #BDBDBD;
+            --accent-sand: #E0E0E0;
             --white: #FFFFFF;
-            --gray: #D1D5DB;
+            --off-white: #F5F5F5;
+            --text-primary: #E0E0E0; /* For dark sections */
+            --text-secondary: #BDBDBD;
+            --text-dark: #121212; /* For white sections */
+            --elevation-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            --border-color: #E0E0E0;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Roboto', sans-serif;
         }
 
         body {
-            background-color: var(--white);
-            color: var(--charcoal);
-            line-height: 1.6;
+            background-color: var(--charcoal); /* Default to charcoal */
+            color: var(--text-primary);
+            line-height: 1.8;
             overflow-x: hidden;
         }
 
-        /* Navigation */
+        /* Animated Backgrounds */
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .animated-bg {
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue), var(--charcoal));
+            background-size: 200% 200%;
+            animation: gradientAnimation 15s ease infinite;
+        }
+
+        /* Increased Charcoal Sections (50% more) */
+        section:nth-child(2n) {
+            background-color: var(--charcoal); /* More charcoal */
+            color: var(--text-primary);
+        }
+
+        section:nth-child(2n+1) {
+            background-color: var(--white); /* White for balance */
+            color: var(--text-dark);
+        }
+
+        .hero, .parallax, #technology, #acquirer-agnostic, #contact {
+            background-color: var(--charcoal); /* Additional charcoal sections */
+            color: var(--text-primary);
+        }
+
+        /* Navigation - Charcoal */
         nav {
             position: fixed;
             top: 0;
             width: 100%;
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--charcoal) 100%);
-            color: var(--white);
-            padding: 1rem 2rem;
+            background-color: var(--charcoal);
+            color: var(--text-primary);
+            padding: 1.5rem 3rem;
             z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--elevation-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .nav-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
+            width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
+            letter-spacing: 1.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
         }
 
         .nav-links a {
-            color: var(--white);
+            color: var(--text-secondary);
             text-decoration: none;
-            margin-left: 2rem;
             font-size: 1rem;
-            transition: color 0.3s ease;
+            font-weight: 500;
+            transition: color 0.3s ease, transform 0.3s ease;
         }
 
         .nav-links a:hover {
-            color: var(--sand);
+            color: var(--accent-sand);
+            transform: scale(1.05);
         }
 
         /* Hero Section */
         .hero {
             height: 100vh;
-            background: linear-gradient(45deg, var(--primary-blue), var(--light-blue));
             display: flex;
             align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: var(--white);
+            justify-content: flex-start;
+            text-align: left;
             position: relative;
+            padding: 0 5rem 0 10%;
             overflow: hidden;
         }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://source.unsplash.com/random/1920x1080/?payment,technology');
-            opacity: 0.2;
-            z-index: 0;
-        }
-
         .hero-content {
+            max-width: 700px;
             z-index: 1;
-            max-width: 800px;
-            padding: 2rem;
+            padding: 3rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            animation: fadeInUp 1s ease-out;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            animation: fadeInLeft 1s ease-out;
         }
 
         .hero p {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            font-weight: 300;
         }
 
+        /* Buttons - Quirky Animations */
         .cta-button {
-            background: var(--sand);
-            color: var(--charcoal);
-            padding: 1rem 2rem;
-            border-radius: 5px;
+            background: linear-gradient(135deg, var(--light-blue), var(--primary-blue));
+            color: var(--white);
+            padding: 1.2rem 2.5rem;
+            border: none;
+            border-radius: 4px;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 500;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--elevation-shadow);
+            cursor: pointer;
         }
 
         .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: quirkyBounce 0.5s ease;
+        }
+
+        @keyframes quirkyBounce {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.2) rotate(5deg); }
+            60% { transform: scale(0.9) rotate(-5deg); }
+            100% { transform: scale(1); }
         }
 
         /* Section Styling */
         section {
-            padding: 5rem 2rem;
-            max-width: 1200px;
+            padding: 7rem 3rem;
+            max-width: 1400px;
             margin: 0 auto;
+            position: relative;
+        }
+
+        section::after {
+            content: '';
+            display: block;
+            width: 80%;
+            height: 1px;
+            background: var(--border-color);
+            margin: 4rem auto 0;
+            opacity: 0.5;
         }
 
         .section-title {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            color: var(--charcoal);
-            text-align: center;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
         }
 
-        /* Parallax Section */
-        .parallax {
-            background: url('https://source.unsplash.com/random/1920x1080/?fintech') no-repeat center center;
-            background-attachment: fixed;
-            background-size: cover;
-            padding: 8rem 2rem;
-            color: var(--white);
-            text-align: center;
-            position: relative;
+        section:nth-child(odd) .section-title {
+            color: var(--text-dark);
         }
 
-        .parallax::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 0;
-        }
-
-        .parallax-content {
-            position: relative;
-            z-index: 1;
+        section:nth-child(even) .section-title {
+            color: var(--text-primary);
         }
 
         /* Sideways Scroll */
         .sideways-scroll {
             display: flex;
             overflow-x: auto;
-            padding: 2rem 0;
-            gap: 2rem;
-            background: var(--sand);
+            padding: 3rem 0;
+            gap: 3rem;
+            background: transparent;
         }
 
         .card {
-            flex: 0 0 300px;
+            flex: 0 0 320px;
             background: var(--white);
-            border-radius: 10px;
-            padding: 2rem;
+            border-radius: 8px;
+            padding: 2.5rem;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            box-shadow: var(--elevation-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        section:nth-child(even) .card {
+            background: var(--medium-gray); /* Lighter for charcoal sections */
+            color: var(--text-primary);
         }
 
         .card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px) rotate(2deg);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+            animation: quirkyColor 1s ease;
+        }
+
+        @keyframes quirkyColor {
+            0% { background-color: var(--white); }
+            50% { background-color: #FFEB3B; }
+            100% { background-color: var(--white); }
+        }
+
+        section:nth-child(even) .card:hover {
+            animation: quirkyColorDark 1s ease;
+        }
+
+        @keyframes quirkyColorDark {
+            0% { background-color: var(--medium-gray); }
+            50% { background-color: #4CAF50; } /* Green flash for dark */
+            100% { background-color: var(--medium-gray); }
         }
 
         .card img {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 1rem;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Expandable Content */
+        details {
+            background: var(--off-white);
+            border-radius: 8px;
+            margin: 2rem 0;
+            overflow: hidden;
+            box-shadow: var(--elevation-shadow);
+            transition: box-shadow 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        section:nth-child(even) details {
+            background: var(--medium-gray);
+            color: var(--text-primary);
+        }
+
+        details:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        summary {
+            padding: 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            background: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        section:nth-child(even) summary {
+            background: var(--dark-gray);
+            color: var(--text-primary);
+        }
+
+        summary::after {
+            content: 'expand_more';
+            font-family: 'Material Icons';
+            transition: transform 0.3s ease;
+        }
+
+        details[open] summary::after {
+            transform: rotate(180deg);
+        }
+
+        details p {
+            padding: 1.5rem;
+            color: var(--text-secondary);
         }
 
         /* Comparison Table */
         .comparison-table {
             width: 100%;
-            border-collapse: collapse;
-            margin: 2rem 0;
-            background: var(--white);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-collapse: separate;
+            border-spacing: 0 1rem;
+            margin: 3rem 0;
+            background: transparent;
+            box-shadow: none;
         }
 
         .comparison-table th, .comparison-table td {
-            padding: 1rem;
+            padding: 1.5rem;
             text-align: center;
-            border-bottom: 1px solid var(--gray);
+            border: 1px solid var(--border-color);
+            background: var(--white);
+        }
+
+        section:nth-child(even) .comparison-table th,
+        section:nth-child(even) .comparison-table td {
+            background: var(--medium-gray);
+            color: var(--text-primary);
         }
 
         .comparison-table th {
             background: var(--primary-blue);
             color: var(--white);
+            font-weight: 500;
         }
 
         /* Quote Scroll */
         .quote-scroll {
             display: flex;
             overflow-x: auto;
-            gap: 2rem;
-            padding: 2rem 0;
-            background: var(--charcoal);
-            color: var(--white);
+            gap: 3rem;
+            padding: 3rem 0;
+            background: transparent;
         }
 
         .quote {
-            flex: 0 0 300px;
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            flex: 0 0 320px;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: 8px;
             text-align: center;
+            box-shadow: var(--elevation-shadow);
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border-color);
         }
 
-        /* Technology Section */
+        section:nth-child(even) .quote {
+            background: var(--medium-gray);
+            color: var(--text-primary);
+        }
+
+        .quote:hover {
+            transform: scale(1.05) rotate(3deg);
+            animation: quirkyShake 0.5s ease;
+        }
+
+        @keyframes quirkyShake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(3deg); }
+            50% { transform: rotate(-3deg); }
+            75% { transform: rotate(3deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* Technology Grid */
         .technology-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 3rem;
         }
 
-        /* Footer */
+        /* Interactive Slider */
+        .interactive-slider {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--elevation-shadow);
+            text-align: center;
+        }
+
+        section:nth-child(even) .interactive-slider {
+            background: var(--medium-gray);
+            color: var(--text-primary);
+        }
+
+        .interactive-slider input[type="range"] {
+            width: 80%;
+            margin: 1rem 0;
+        }
+
+        .slider-output {
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+        }
+
+        section:nth-child(even) .slider-output {
+            color: var(--light-blue);
+        }
+
+        /* Quirky Button */
+        .quirky-button {
+            background: var(--light-blue);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .quirky-button:hover {
+            animation: quirkySpin 1s linear infinite;
+        }
+
+        @keyframes quirkySpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer - Charcoal */
         footer {
             background: var(--charcoal);
-            color: var(--white);
-            padding: 3rem 2rem;
+            color: var(--text-secondary);
+            padding: 4rem 3rem;
             text-align: center;
+            border-top: 1px solid var(--border-color);
         }
 
         footer a {
-            color: var(--sand);
+            color: var(--light-blue);
             text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--accent-sand);
         }
 
         /* Animations */
-        @keyframes fadeInUp {
+        @keyframes fadeInLeft {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateX(-20px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(0);
             }
         }
 
@@ -269,11 +473,30 @@
             }
 
             .nav-links {
+                flex-direction: column;
+                gap: 1.5rem;
+                position: absolute;
+                top: 80px;
+                right: 3rem;
+                background: var(--charcoal);
+                padding: 2rem;
                 display: none;
+                border: 1px solid var(--border-color);
             }
 
-            .section-title {
-                font-size: 2rem;
+            .technology-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero {
+                justify-content: center;
+                text-align: center;
+                padding: 0 2rem;
+            }
+
+            section {
+                padding: 5rem 2rem;
             }
         }
     </style>
@@ -283,11 +506,18 @@
     <nav>
         <div class="nav-container">
             <div class="logo">Hertford Payments</div>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
             <div class="nav-links">
                 <a href="#home">Home</a>
                 <a href="#solutions">Solutions</a>
                 <a href="#technology">Technology</a>
                 <a href="#rates">Rates</a>
+                <a href="#tailored-bundles">Tailored Bundles</a>
+                <a href="#acquirer-agnostic">Acquirer Agnostic</a>
                 <a href="#partner">Partner</a>
                 <a href="#about">About</a>
                 <a href="#contact">Contact</a>
@@ -295,46 +525,67 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
+    <!-- Hero Section - Charcoal -->
+    <section id="home" class="hero animated-bg">
         <div class="hero-content">
             <h1>Modern Payment Solutions for UK Small Businesses</h1>
-            <p>Empowering SMEs, sole traders, and local businesses with seamless POS, ECOM, and payment gateway solutions.</p>
+            <p>Empowering SMEs, sole traders, and local businesses with seamless POS, ECOM, and payment gateway solutions. Experience secure, efficient transactions tailored to your growth.</p>
             <a href="#contact" class="cta-button">Get Started</a>
         </div>
     </section>
 
-    <!-- Solutions Section -->
+    <!-- Solutions Section - White -->
     <section id="solutions">
         <h2 class="section-title">Our Payment Solutions</h2>
         <div class="sideways-scroll">
             <div class="card">
-                <img src="https://via.placeholder.com/100?text=POS" alt="POS Icon">
+                <img src="https://via.placeholder.com/80?text=POS" alt="POS Icon">
                 <h3>POS</h3>
                 <p>Streamlined point-of-sale solutions with terminals like the Castles S1F2, designed for retail and hospitality.</p>
             </div>
             <div class="card">
-                <img src="https://via.placeholder.com/100?text=POS+" alt="POS+ Icon">
+                <img src="https://via.placeholder.com/80?text=POS+" alt="POS+ Icon">
                 <h3>POS+</h3>
                 <p>Advanced POS systems with integrated analytics and inventory management for growing businesses.</p>
             </div>
             <div class="card">
-                <img src="https://via.placeholder.com/100?text=ECOM" alt="ECOM Icon">
+                <img src="https://via.placeholder.com/80?text=ECOM" alt="ECOM Icon">
                 <h3>ECOM</h3>
                 <p>Secure e-commerce gateways compatible with Magento, offering seamless online payment experiences.</p>
             </div>
         </div>
-    </section>
-
-    <!-- Parallax Section -->
-    <section class="parallax">
-        <div class="parallax-content">
-            <h2>Why Choose Hertford Payments?</h2>
-            <p>Trusted by thousands of UK SMEs for reliable, secure, and innovative payment solutions tailored to your needs.</p>
+        <!-- Expandable Content -->
+        <details>
+            <summary>More on POS Solutions</summary>
+            <p>Our POS systems support contactless payments, EMV chip cards, and mobile wallets like Apple Pay and Google Pay. Integrate with inventory software for real-time stock updates, generate detailed sales reports, and customize receipts with branding. Ideal for high-volume retail environments with multi-user support and offline mode for uninterrupted service.</p>
+        </details>
+        <details>
+            <summary>More on POS+ Solutions</summary>
+            <p>POS+ includes advanced features like customer loyalty programs, multi-location management, and AI-driven sales forecasting. Sync data across devices in real-time, manage employee permissions, and integrate with CRM tools. Perfect for scaling businesses needing in-depth analytics on customer behavior and sales trends.</p>
+        </details>
+        <details>
+            <summary>More on ECOM Solutions</summary>
+            <p>ECOM gateways offer PCI DSS compliance, fraud detection tools, and support for multiple currencies. Easy integration with platforms like Shopify, WooCommerce, and custom APIs. Features include one-click checkouts, subscription billing, and abandoned cart recovery to boost conversion rates.</p>
+        </details>
+        <!-- Interactive Slider -->
+        <div class="interactive-slider">
+            <h3>Estimate Your Savings</h3>
+            <input type="range" min="1000" max="100000" value="50000" id="transactionSlider" oninput="updateSavings()">
+            <p>Monthly Transactions: £<span id="transactionValue">50000</span></p>
+            <p class="slider-output">Estimated Savings: £<span id="savingsOutput">425</span></p>
         </div>
     </section>
 
-    <!-- Technology Section -->
+    <!-- Parallax Section - Charcoal -->
+    <section class="parallax animated-bg">
+        <div class="parallax-content">
+            <h2>Why Choose Hertford Payments?</h2>
+            <p>Trusted by thousands of UK SMEs for reliable, secure, and innovative payment solutions tailored to your needs. We prioritize uptime, cost savings, and customer support.</p>
+            <button class="quirky-button" onclick="quirkyAlert()">Learn More Fun!</button>
+        </div>
+    </section>
+
+    <!-- Technology Section - Charcoal -->
     <section id="technology">
         <h2 class="section-title">Cutting-Edge Technology</h2>
         <div class="technology-grid">
@@ -351,9 +602,23 @@
                 <p>Advanced authentication for safer online transactions, protecting both merchants and customers.</p>
             </div>
         </div>
+        <!-- Expandable Content -->
+        <details>
+            <summary>Detailed BIN Lookup</summary>
+            <p>BIN Lookup provides issuer identification, card type detection (debit/credit/prepaid), and country of origin. It helps in applying dynamic fees, routing decisions, and preventing unauthorized transactions by cross-referencing with watchlists.</p>
+        </details>
+        <details>
+            <summary>Detailed Token Vault</summary>
+            <p>Our Token Vault uses encryption standards like AES-256, supports tokenization across channels, and enables secure data sharing with partners. It reduces PCI scope for merchants and facilitates seamless updates for expired cards.</p>
+        </details>
+        <details>
+            <summary>Detailed 3D Secure</summary>
+            <p>Implements 3DS2 protocol with frictionless authentication, risk-based analysis, and biometric support. Reduces chargebacks by up to 70%, complies with PSD2 regulations, and integrates with major card schemes like Visa and Mastercard.</p>
+        </details>
+        <button class="quirky-button" onclick="quirkyTech()">Tech Surprise!</button>
     </section>
 
-    <!-- Rates Section -->
+    <!-- Rates Section - White -->
     <section id="rates">
         <h2 class="section-title">Acquiring Rates</h2>
         <table class="comparison-table">
@@ -386,16 +651,101 @@
                 </tr>
             </tbody>
         </table>
+        <!-- Expandable Content -->
+        <details>
+            <summary>Rate Details and Comparisons</summary>
+            <p>Starter plan suits new businesses with low volume, including free setup and 24/7 support. Pro offers volume discounts for transactions over £10k/month. Enterprise includes custom integrations, API access, and priority routing. All plans have no hidden fees, instant settlements, and refund processing at no extra cost.</p>
+        </details>
+        <!-- Interactive Slider -->
+        <div class="interactive-slider">
+            <h3>Rate Simulator</h3>
+            <input type="range" min="0" max="2" step="0.1" value="1.7" id="rateSlider" oninput="updateRate()">
+            <p>Transaction Fee: <span id="rateValue">1.7</span>%</p>
+            <p class="slider-output">Monthly Cost: £<span id="costOutput">50</span></p>
+        </div>
     </section>
 
-    <!-- Partner Section -->
+    <!-- Tailored Bundles Section - Charcoal -->
+    <section id="tailored-bundles">
+        <h2 class="section-title">Tailored Bundles</h2>
+        <p>Customize your payment ecosystem with bundles designed for specific industries. Combine hardware, software, and services for optimal performance.</p>
+        <div class="sideways-scroll">
+            <div class="card">
+                <h3>Retail Bundle</h3>
+                <p>POS terminal + Inventory App + Analytics Dashboard. Starting at £30/month.</p>
+            </div>
+            <div class="card">
+                <h3>Hospitality Bundle</h3>
+                <p>POS+ with table management + Mobile ordering + Loyalty integration. Starting at £60/month.</p>
+            </div>
+            <div class="card">
+                <h3>E-Commerce Bundle</h3>
+                <p>Gateway + Fraud Tools + Subscription Management. Starting at £40/month.</p>
+            </div>
+        </div>
+        <!-- Expandable Content -->
+        <details>
+            <summary>Retail Bundle Details</summary>
+            <p>Includes Castles S1F2 terminal, cloud-based inventory with barcode scanning, real-time sales reports, and integration with accounting software like QuickBooks. Supports multi-store synchronization and custom promotions.</p>
+        </details>
+        <details>
+            <summary>Hospitality Bundle Details</summary>
+            <p>Features split billing, kitchen display systems, staff scheduling, and customer feedback tools. Integrates with delivery platforms like Uber Eats and provides peak-hour optimization analytics.</p>
+        </details>
+        <details>
+            <summary>E-Commerce Bundle Details</summary>
+            <p>Offers A/B testing for checkout flows, multi-language support, and automated tax calculations. Includes webhooks for order fulfillment and partnerships with shipping providers.</p>
+        </details>
+        <a href="#contact" class="cta-button">Customize Your Bundle</a>
+        <button class="quirky-button" onclick="quirkyBundle()">Bundle Fun!</button>
+    </section>
+
+    <!-- Acquirer Agnostic Section - Charcoal -->
+    <section id="acquirer-agnostic">
+        <h2 class="section-title">Acquirer Agnostic with Smart Routing</h2>
+        <p>We are acquirer-agnostic, meaning we work with multiple acquiring banks to provide flexibility. Our Smart Routing technology ensures transaction stability by dynamically selecting the best path based on cost, speed, and reliability.</p>
+        <div class="technology-grid">
+            <div class="card">
+                <h3>Multi-Acquirer Support</h3>
+                <p>Connect to top UK acquirers like Barclays, Worldpay, and Elavon without lock-in.</p>
+            </div>
+            <div class="card">
+                <h3>Smart Routing</h3>
+                <p>AI-driven routing optimizes for lowest fees, highest approval rates, and minimal downtime.</p>
+            </div>
+            <div class="card">
+                <h3>Benefits</h3>
+                <p>Reduce costs by up to 20%, improve uptime to 99.99%, and enhance security with fallback options.</p>
+            </div>
+        </div>
+        <!-- Expandable Content -->
+        <details>
+            <summary>Multi-Acquirer Details</summary>
+            <p>Seamless switching between acquirers, support for international payments, and compliance with all major schemes. No need for multiple contracts; we handle the aggregation.</p>
+        </details>
+        <details>
+            <summary>Smart Routing Details</summary>
+            <p>Uses machine learning to analyze transaction patterns, predict failures, and route accordingly. Factors include card type, merchant category, time of day, and historical data for optimal performance.</p>
+        </details>
+        <details>
+            <summary>Cost Effectiveness and Stability</summary>
+            <p>Achieve savings through dynamic fee negotiation, automatic retries on failures, and load balancing across networks. Includes real-time monitoring dashboards for transparency.</p>
+        </details>
+    </section>
+
+    <!-- Partner Section - White -->
     <section id="partner">
         <h2 class="section-title">Partner With Us</h2>
-        <p>Join our referral program and earn competitive kickbacks by introducing businesses to Hertford Payments.</p>
+        <p>Join our referral program and earn competitive kickbacks by introducing businesses to Hertford Payments. Enjoy tiered rewards and marketing support.</p>
         <a href="#contact" class="cta-button">Become a Partner</a>
+        <!-- Expandable Content -->
+        <details>
+            <summary>Partner Program Details</summary>
+            <p>Earn up to 30% recurring commissions, access co-branded materials, and get dedicated account managers. Suitable for accountants, web developers, and consultants. Track referrals via a secure portal with real-time payouts.</p>
+        </details>
     </section>
 
-    <!-- Quote Scroll Section -->
+    <!-- Quote Scroll Section - Charcoal -->
     <section>
         <h2 class="section-title">What Our Customers Say</h2>
         <div class="quote-scroll">
@@ -411,20 +761,42 @@
                 <p>"Their e-commerce gateway integrates perfectly with our Magento store."</p>
                 <p><strong>Sarah, Online Retailer</strong></p>
             </div>
+            <div class="quote">
+                <p>"Smart Routing saved us thousands in fees last year."</p>
+                <p><strong>Tom, E-Commerce Director</strong></p>
+            </div>
+        </div>
+        <!-- Interactive Slider -->
+        <div class="interactive-slider">
+            <h3>Customer Satisfaction Simulator</h3>
+            <input type="range" min="0" max="100" value="85" id="satisfactionSlider" oninput="updateSatisfaction()">
+            <p>Satisfaction Level: <span id="satisfactionValue">85</span>%</p>
+            <p class="slider-output">Feedback: <span id="feedbackOutput">Great!</span></p>
         </div>
     </section>
 
-    <!-- About Section -->
+    <!-- About Section - White -->
     <section id="about">
         <h2 class="section-title">About Hertford Payments</h2>
-        <p>We are a UK-based fintech dedicated to empowering small businesses, sole traders, and local merchants with modern, secure, and easy-to-use payment solutions. From POS terminals to e-commerce gateways, we provide everything you need to succeed.</p>
+        <p>We are a UK-based fintech dedicated to empowering small businesses, sole traders, and local merchants with modern, secure, and easy-to-use payment solutions. From POS terminals to e-commerce gateways, we provide everything you need to succeed in a competitive market.</p>
+        <!-- Expandable Content -->
+        <details>
+            <summary>Our Mission and Values</summary>
+            <p>Founded in 2018, we focus on innovation, transparency, and customer-centric design. Our team of 50+ experts ensures compliance with FCA regulations, invests in R&D for emerging tech like blockchain payments, and partners with charities to support local economies.</p>
+        </details>
     </section>
 
-    <!-- Contact Section -->
+    <!-- Contact Section - Charcoal -->
     <section id="contact">
         <h2 class="section-title">Get in Touch</h2>
         <p>Email: support@hertfordpayments.co.uk<br>Phone: 020 1234 5678<br>Address: 123 High Street, Hertford, SG14 1AA</p>
         <a href="mailto:support@hertfordpayments.co.uk" class="cta-button">Contact Us</a>
+        <!-- Expandable Content -->
+        <details>
+            <summary>Support Options</summary>
+            <p>Live chat available 24/7, dedicated phone lines for urgent issues, and a knowledge base with tutorials. Enterprise clients get personalized onboarding and quarterly reviews.</p>
+        </details>
+        <button class="quirky-button" onclick="quirkyContact()">Send Magic!</button>
     </section>
 
     <!-- Footer -->
@@ -449,6 +821,53 @@
             let scrollPosition = window.pageYOffset;
             parallax.style.backgroundPositionY = scrollPosition * 0.5 + 'px';
         });
+
+        // Hamburger Menu
+        function toggleMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+            document.querySelector('.hamburger').classList.toggle('active');
+        }
+
+        // Interactive Slider Functions
+        function updateSavings() {
+            const value = document.getElementById('transactionSlider').value;
+            document.getElementById('transactionValue').textContent = value;
+            const savings = Math.round(value * 0.0085);
+            document.getElementById('savingsOutput').textContent = savings;
+            document.getElementById('savingsOutput').style.color = savings > 500 ? '#4CAF50' : '#F44336';
+        }
+
+        function updateRate() {
+            const value = document.getElementById('rateSlider').value;
+            document.getElementById('rateValue').textContent = value;
+            const cost = Math.round(20 + (value * 30));
+            document.getElementById('costOutput').textContent = cost;
+        }
+
+        function updateSatisfaction() {
+            const value = document.getElementById('satisfactionSlider').value;
+            document.getElementById('satisfactionValue').textContent = value;
+            let feedback = value > 80 ? 'Excellent!' : value > 50 ? 'Good!' : 'Needs Improvement!';
+            document.getElementById('feedbackOutput').textContent = feedback;
+            document.getElementById('feedbackOutput').style.animation = 'quirkyBounce 0.5s ease';
+        }
+
+        // Quirky Button Functions
+        function quirkyAlert() {
+            alert('You just unlocked a secret discount code: HERTFORDFUN!');
+        }
+
+        function quirkyTech() {
+            alert('Tech fact: Our systems process over 1 million transactions daily with 99.99% uptime!');
+        }
+
+        function quirkyBundle() {
+            alert('Bundle unlocked: Get 10% off your first month!');
+        }
+
+        function quirkyContact() {
+            alert('Message sent with magic sparkles! ✨');
+        }
     </script>
 </body>
 </html>

@@ -255,6 +255,14 @@
             transition: background 0.3s;
         }
 
+        .swimlane .task-row:nth-child(even) {
+            background: #fbfbfb;
+        }
+
+        body.dark-mode .swimlane .task-row:nth-child(even) {
+            background: #1f1f22;
+        }
+
         .task-row:hover {
             background: #f6f6f6;
         }
@@ -897,6 +905,7 @@
                     const dragHandle = document.createElement('div');
                     dragHandle.className = 'drag-handle';
                     dragHandle.textContent = '⋮';
+                    dragHandle.draggable = true;
                     dragHandle.ondragstart = (e) => {
                         e.dataTransfer.setData('text/plain', JSON.stringify({
                             swimlane,
@@ -987,11 +996,16 @@
                                 task.timeline[toMonth] = data.newStatus;
                                 saveData();
                                 renderRoadmap();
-                            } else if (data.swimlane === swimlane && data.taskName === task.name && data.fromMonth) {
-                                if (data.fromMonth !== toMonth) {
-                                    const value = task.timeline[data.fromMonth];
-                                    delete task.timeline[data.fromMonth];
-                                    task.timeline[toMonth] = value;
+                            } else if (data.fromMonth) {
+                                const origSwimlane = data.swimlane;
+                                const origTaskName = data.taskName;
+                                const origTask = roadmapData[origSwimlane].find(t => t.name === origTaskName);
+                                if (origTask && origTask.timeline[data.fromMonth]) {
+                                    const value = origTask.timeline[data.fromMonth];
+                                    delete origTask.timeline[data.fromMonth];
+                                    if (data.fromMonth !== toMonth || origTask !== task) {
+                                        task.timeline[toMonth] = value;
+                                    }
                                     saveData();
                                     renderRoadmap();
                                 }

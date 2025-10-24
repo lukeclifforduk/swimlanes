@@ -29,6 +29,28 @@
             --text-secondary: #00000073; /* Ant Design secondary text */
             --shadow: 0 1px 4px rgba(0, 21, 41, 0.08); /* Softer shadow per Ant Design */
             --shadow-hover: 0 2px 8px rgba(0, 21, 41, 0.08);
+            --title-color: #292CF5;
+        }
+
+        body.dark-mode {
+            --bg: #09090C;
+            --card-bg: #1A1A1D;
+            --border: #333333;
+            --text: #E0E0E0;
+            --text-secondary: #A0A0A0;
+            --shadow: 0 1px 4px rgba(0,0,0,0.2);
+            --shadow-hover: 0 2px 8px rgba(0,0,0,0.3);
+            --primary: #4A90E2;
+            --primary-hover: #5AAAF2;
+            --success: #7ED321;
+            --success-hover: #8FE432;
+            --warning: #F5A623;
+            --warning-hover: #FFB84D;
+            --error: #FF4D4F;
+            --error-hover: #FF6666;
+            --planned: #4A90E2;
+            --planned-hover: #5AAAF2;
+            --title-color: #CAFF0A;
         }
 
         body {
@@ -37,6 +59,10 @@
             color: var(--text);
             line-height: 1.5715; /* Ant Design line height */
             font-size: 14px; /* Base font size per Ant Design */
+        }
+
+        #appTitle {
+            color: var(--title-color);
         }
 
         .header {
@@ -203,8 +229,16 @@
             align-items: center;
         }
 
+        body.dark-mode .swimlane-header {
+            background: #2A2A2E;
+        }
+
         .swimlane-header:hover {
             background: #f0f0f0;
+        }
+
+        body.dark-mode .swimlane-header:hover {
+            background: #333333;
         }
 
         .task-row {
@@ -217,6 +251,10 @@
 
         .task-row:hover {
             background: #f6f6f6;
+        }
+
+        body.dark-mode .task-row:hover {
+            background: #242424;
         }
 
         .task-row:last-child {
@@ -404,9 +442,16 @@
             color: var(--text-secondary);
         }
 
+        body.dark-mode .badge {
+            background: #333333;
+        }
+
         .badge-q3 { background: #e6f7ff; color: #1890ff; }
+        body.dark-mode .badge-q3 { background: #1c3a5e; color: #4A90E2; }
         .badge-q4 { background: #fff7e6; color: #fa8c16; }
+        body.dark-mode .badge-q4 { background: #4a3a1c; color: #F5A623; }
         .badge-2026 { background: #f6ffed; color: #52c41a; }
+        body.dark-mode .badge-2026 { background: #3a4a1c; color: #7ED321; }
 
         .stats {
             display: flex;
@@ -422,6 +467,10 @@
 
         .drop-target {
             background: #e6f7ff;
+        }
+
+        body.dark-mode .drop-target {
+            background: #333333;
         }
 
         .resize-handle {
@@ -468,7 +517,7 @@
 </head>
 <body>
     <div class="header" role="banner">
-        <h1>PXP Technology Roadmap Manager</h1>
+        <h1 id="appTitle" style="font-style: italic;">launchpad roadmap</h1>
         <div class="controls">
             <input type="text" class="search-box" id="searchBox" placeholder="Search tasks..." aria-label="Search tasks">
             <select id="filterQuarter" aria-label="Filter by quarter">
@@ -490,6 +539,7 @@
             <button class="btn" id="collapseAllBtn">Collapse All</button>
             <button class="btn" id="exportBtn">Export Data</button>
             <button class="btn" id="importBtn">Import Data</button>
+            <button class="btn" id="toggleMode">Dark Mode</button>
             <input type="file" id="importFile" accept=".json" style="display: none;">
         </div>
         <div class="stats">
@@ -553,6 +603,7 @@
 
     <script>
         const STORAGE_KEY = 'pxp_roadmap_data';
+        const DARK_MODE_KEY = 'darkMode';
 
         let roadmapData = {
             "PXP Technology - Unity": [
@@ -697,6 +748,11 @@
             if (savedData) {
                 roadmapData = JSON.parse(savedData);
             }
+            const darkMode = localStorage.getItem(DARK_MODE_KEY) === 'true';
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+            }
+            document.getElementById('toggleMode').textContent = darkMode ? 'Light Mode' : 'Dark Mode';
         }
 
         function saveData() {
@@ -770,6 +826,58 @@
                     const row = document.createElement('div');
                     row.className = 'task-row';
                     row.setAttribute('role', 'row');
+                    row.draggable = true;
+                    
+                    row.ondragstart = (e) => {
+                        e.dataTransfer.setData('text/plain', JSON.stringify({
+                            swimlane,
+                            taskName: task.name
+                        }));
+                        row.classList.add('dragging');
+                    };
+                    
+                    row.ondragend = () => row.classList.remove('dragging');
+                    
+                    row.ondragover = (e) => {
+                        e.preventDefault();
+                        row.classList.add('drop-target');
+                    };
+                    
+                    row.ondragleave = () => row.classList.remove('drop-target');
+                    
+                    row.ondrop = (e) => {
+                        e.preventDefault();
+                        row.classList.remove('drop-target');
+                        
+                        const dataStr = e.dataTransfer.getData('text/plain');
+                        if (!dataStr) return;
+                        let data;
+                        try {
+                            data = JSON.parse(dataStr);
+                        } catch (err) {
+                            return;
+                        }
+                        
+                        if (data.swimlane === swimlane && data.taskName !== task.name) {
+                            const fromTask = roadmapData[swimlane].find(t => t.name === data.taskName);
+                            const toTask = task;
+                            const fromIndex = roadmapData[swimlane].indexOf(fromTask);
+                            let toIndex = roadmapData[swimlane].indexOf(toTask);
+                            
+                            let insertAfter = e.offsetY > row.offsetHeight / 2;
+                            if (insertAfter) {
+                                toIndex += 1;
+                            }
+                            
+                            roadmapData[swimlane].splice(fromIndex, 1);
+                            
+                            const adjustedToIndex = fromIndex < toIndex ? toIndex - 1 : toIndex;
+                            
+                            roadmapData[swimlane].splice(adjustedToIndex, 0, fromTask);
+                            saveData();
+                            renderRoadmap();
+                        }
+                    };
                     
                     const nameDiv = document.createElement('div');
                     nameDiv.className = 'task-name';
@@ -968,6 +1076,25 @@
             const timelineMonths = Object.keys(task.timeline || {}).filter(month => task.timeline[month]);
             document.getElementById('taskTimeline').value = timelineMonths.join(', ');
             
+            document.getElementById('modalHeader').textContent = 'Edit Task';
+            document.getElementById('deleteBtn').style.display = '';
+            
+            document.getElementById('taskModal').classList.add('active');
+            document.getElementById('taskName').focus();
+        }
+
+        function openAddModal() {
+            currentEditTask = null;
+            currentEditSwimlane = null;
+            
+            document.getElementById('taskName').value = '';
+            document.getElementById('taskSwimlane').value = '';
+            document.getElementById('taskQuarter').value = '';
+            document.getElementById('taskTimeline').value = '';
+            
+            document.getElementById('modalHeader').textContent = 'Add Task';
+            document.getElementById('deleteBtn').style.display = 'none';
+            
             document.getElementById('taskModal').classList.add('active');
             document.getElementById('taskName').focus();
         }
@@ -986,17 +1113,17 @@
             const newQuarter = document.getElementById('taskQuarter').value.trim();
             const timelineStr = document.getElementById('taskTimeline').value.trim();
             
+            const newTimeline = {};
+            if (timelineStr) {
+                const monthsList = timelineStr.split(',').map(m => m.trim()).filter(m => months.includes(m));
+                monthsList.forEach(month => {
+                    newTimeline[month] = 'Planned';
+                });
+            }
+            
             if (currentEditTask && currentEditSwimlane) {
                 currentEditTask.name = newName;
                 currentEditTask.quarter = newQuarter;
-                
-                const newTimeline = {};
-                if (timelineStr) {
-                    const monthsList = timelineStr.split(',').map(m => m.trim()).filter(m => months.includes(m));
-                    monthsList.forEach(month => {
-                        newTimeline[month] = currentEditTask.timeline?.[month] || 'Planned';
-                    });
-                }
                 currentEditTask.timeline = newTimeline;
                 
                 if (newSwimlane !== currentEditSwimlane) {
@@ -1007,10 +1134,18 @@
                     if (!roadmapData[newSwimlane]) roadmapData[newSwimlane] = [];
                     roadmapData[newSwimlane].push(currentEditTask);
                 }
+            } else {
+                const newTask = {
+                    name: newName,
+                    quarter: newQuarter,
+                    timeline: newTimeline
+                };
                 
-                saveData();
+                if (!roadmapData[newSwimlane]) roadmapData[newSwimlane] = [];
+                roadmapData[newSwimlane].push(newTask);
             }
             
+            saveData();
             closeModal();
             renderRoadmap();
         };
@@ -1029,24 +1164,7 @@
             }
         };
 
-        document.getElementById('addTaskBtn').onclick = () => {
-            const swimlane = prompt('Enter swimlane name:').trim();
-            if (!swimlane) return;
-            
-            const taskName = prompt('Enter task name:').trim();
-            if (!taskName) return;
-            
-            const newTask = {
-                name: taskName,
-                quarter: '',
-                timeline: {}
-            };
-            
-            if (!roadmapData[swimlane]) roadmapData[swimlane] = [];
-            roadmapData[swimlane].push(newTask);
-            saveData();
-            renderRoadmap();
-        };
+        document.getElementById('addTaskBtn').onclick = openAddModal;
 
         document.getElementById('expandAllBtn').onclick = () => {
             document.querySelectorAll('.swimlane').forEach(sl => sl.classList.remove('collapsed'));
@@ -1095,6 +1213,13 @@
 
         document.getElementById('taskModal').onclick = (e) => {
             if (e.target.id === 'taskModal') closeModal();
+        };
+
+        document.getElementById('toggleMode').onclick = () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem(DARK_MODE_KEY, isDark);
+            document.getElementById('toggleMode').textContent = isDark ? 'Light Mode' : 'Dark Mode';
         };
 
         function setupTagPalette() {

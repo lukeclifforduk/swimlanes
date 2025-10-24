@@ -30,6 +30,8 @@
             --shadow: 0 1px 4px rgba(0, 21, 41, 0.08); /* Softer shadow per Ant Design */
             --shadow-hover: 0 2px 8px rgba(0, 21, 41, 0.08);
             --title-color: #292CF5;
+            --header-height: 72px;
+            --timeline-height: 48px;
         }
 
         body.dark-mode {
@@ -147,7 +149,8 @@
 
         .roadmap-container {
             padding: 16px 24px; /* Consistent padding */
-            overflow-x: auto;
+            overflow: hidden;
+            height: calc(100vh - var(--header-height));
         }
 
         .timeline-header {
@@ -157,8 +160,6 @@
             padding: 8px 16px; /* Ant Design table header padding */
             border-radius: 2px;
             box-shadow: var(--shadow);
-            position: sticky;
-            top: 72px; /* Adjusted for header height */
             z-index: 50;
         }
 
@@ -495,6 +496,11 @@
         :focus-visible {
             outline: 2px solid var(--primary);
             outline-offset: 2px;
+        }
+
+        #roadmapContent {
+            overflow: auto;
+            height: calc(100% - var(--timeline-height) - 16px);
         }
 
         @media (max-width: 768px) {
@@ -1232,10 +1238,30 @@
             });
         }
 
+        function updateTimelineTop() {
+            const header = document.querySelector('.header');
+            const timelineHeader = document.querySelector('.timeline-header');
+            if (header && timelineHeader) {
+                document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`);
+                document.documentElement.style.setProperty('--timeline-height', `${timelineHeader.offsetHeight}px`);
+            }
+        }
+
         // Initial load and render
         loadData();
         setupTagPalette();
         renderRoadmap();
+        updateTimelineTop();
+        window.addEventListener('resize', () => {
+            updateTimelineTop();
+            autoSizeColumns();
+        });
+        window.addEventListener('load', updateTimelineTop);
+        if ('ResizeObserver' in window) {
+            const resizeObserver = new ResizeObserver(updateTimelineTop);
+            resizeObserver.observe(document.querySelector('.header'));
+            resizeObserver.observe(document.querySelector('.timeline-header'));
+        }
     </script>
 </body>
 </html>

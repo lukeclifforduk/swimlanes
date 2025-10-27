@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web App Mockup</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f0f2f5;
+        }
+        #home {
+            padding: 20px;
+            text-align: center;
+        }
+        .ant-btn {
+            background: #1890ff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .ant-btn:hover {
+            background: #40a9ff;
+        }
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background: white;
+            box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .drawer.open {
+            right: 0;
+        }
+        .drawer-content {
+            padding: 16px;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #000;
+        }
+        .close-btn:hover {
+            color: #1890ff;
+        }
+        .ant-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #f0f0f0;
+        }
+        .ant-table th,
+        .ant-table td {
+            border: 1px solid #f0f0f0;
+            padding: 12px 8px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .ant-table th {
+            background: #fafafa;
+            font-weight: 500;
+        }
+        .ant-table td.center {
+            text-align: center;
+        }
+        .circle {
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 220px;
+            background-color: white;
+            color: #000;
+            text-align: left;
+            border-radius: 4px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: white transparent transparent transparent;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+        }
+        .green {
+            color: green;
+        }
+        .red {
+            color: red;
+        }
+        .neutral {
+            color: #fa8c16;
+        }
+    </style>
+</head>
+<body>
+    <div id="home">
+        <h1>Home Page</h1>
+        <button class="ant-btn" onclick="openDrawer()">Open Drawer</button>
+    </div>
+    <div id="drawer" class="drawer">
+        <div class="drawer-content">
+            <button class="close-btn" onclick="closeDrawer()">×</button>
+            <table class="ant-table">
+                <thead>
+                    <tr>
+                        <th>Stage</th>
+                        <th>Agent</th>
+                        <th>Partner</th>
+                        <th>Global</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>IVR Screening</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 10 minutes<br>Average Stage Speed: 15 minutes<br><span class="green">33% faster</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 10 minutes<br>Average Stage Speed: 10 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 10 minutes<br>Average Stage Speed: 20 minutes<br><span class="green">50% faster</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>Product Selection</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 5 minutes<br>Average Stage Speed: 12 minutes<br><span class="green">58% faster</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 5 minutes<br>Average Stage Speed: 5 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 5 minutes<br>Average Stage Speed: 10 minutes<br><span class="green">50% faster</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>Related Entities</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 15 minutes<br>Average Stage Speed: 8 minutes<br><span class="red">88% slower</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 15 minutes<br>Average Stage Speed: 15 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 15 minutes<br>Average Stage Speed: 12 minutes<br><span class="red">25% slower</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>Product Assignment</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 120 minutes<br>Average Stage Speed: 150 minutes<br><span class="green">20% faster</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 120 minutes<br>Average Stage Speed: 90 minutes<br><span class="red">33% slower</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 120 minutes<br>Average Stage Speed: 120 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>Merchant Application Questions</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 20 minutes<br>Average Stage Speed: 30 minutes<br><span class="green">33% faster</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 20 minutes<br>Average Stage Speed: 20 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 20 minutes<br>Average Stage Speed: 40 minutes<br><span class="green">50% faster</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>Summary Page</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 8 minutes<br>Average Stage Speed: 15 minutes<br><span class="green">47% faster</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 8 minutes<br>Average Stage Speed: 6 minutes<br><span class="red">33% slower</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 8 minutes<br>Average Stage Speed: 5 minutes<br><span class="red">60% slower</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>Contract Sent</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 3 minutes<br>Average Stage Speed: 10 minutes<br><span class="green">70% faster</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 3 minutes<br>Average Stage Speed: 3 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 3 minutes<br>Average Stage Speed: 8 minutes<br><span class="green">63% faster</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>Contract Received</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 4 minutes<br>Average Stage Speed: 9 minutes<br><span class="green">56% faster</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 4 minutes<br>Average Stage Speed: 4 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 4 minutes<br>Average Stage Speed: 4 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>Third Party Checks Started</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 6 minutes<br>Average Stage Speed: 12 minutes<br><span class="green">50% faster</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 6 minutes<br>Average Stage Speed: 4 minutes<br><span class="red">50% slower</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 6 minutes<br>Average Stage Speed: 3 minutes<br><span class="red">100% slower</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>Third Party Checks Completed</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 7 minutes<br>Average Stage Speed: 4 minutes<br><span class="red">75% slower</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 7 minutes<br>Average Stage Speed: 7 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 7 minutes<br>Average Stage Speed: 7 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>Approval Decision Taken</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 5 minutes<br>Average Stage Speed: 11 minutes<br><span class="green">55% faster</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 5 minutes<br>Average Stage Speed: 3 minutes<br><span class="red">67% slower</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 5 minutes<br>Average Stage Speed: 4 minutes<br><span class="red">25% slower</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>Merchant ID On File</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 2 minutes<br>Average Stage Speed: 6 minutes<br><span class="green">67% faster</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 2 minutes<br>Average Stage Speed: 2 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 2 minutes<br>Average Stage Speed: 5 minutes<br><span class="green">60% faster</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>EIT Triggered</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 4 minutes<br>Average Stage Speed: 8 minutes<br><span class="green">50% faster</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 4 minutes<br>Average Stage Speed: 4 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 4 minutes<br>Average Stage Speed: 9 minutes<br><span class="green">56% faster</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>Product Shipped</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 30 minutes<br>Average Stage Speed: 45 minutes<br><span class="green">33% faster</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 30 minutes<br>Average Stage Speed: 20 minutes<br><span class="red">50% slower</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 30 minutes<br>Average Stage Speed: 25 minutes<br><span class="red">20% slower</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>Product Arrived</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 60 minutes<br>Average Stage Speed: 40 minutes<br><span class="red">50% slower</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 60 minutes<br>Average Stage Speed: 60 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 60 minutes<br>Average Stage Speed: 60 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                    </tr>
+                    <tr>
+                        <td>Active Merchant</td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 0 minutes<br>Average Stage Speed: 10 minutes<br><span class="green">100% faster</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 0 minutes<br>Average Stage Speed: 0 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 0 minutes<br>Average Stage Speed: 0 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        function openDrawer() {
+            document.getElementById('drawer').classList.add('open');
+        }
+        function closeDrawer() {
+            document.getElementById('drawer').classList.remove('open');
+        }
+    </script>
+</body>
+</html>

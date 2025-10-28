@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merchant Application Form</title>
+    <style>
+        /* Mimicking ANT Design: Clean, minimal, blue accents, sans-serif font */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .dashboard {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #001529;
+            color: white;
+            padding: 16px;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h2 {
+            margin: 0 0 16px;
+            font-size: 18px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 8px;
+        }
+
+        .form-item {
+            margin-bottom: 16px; /* Minimal spacing */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-item label {
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: #595959;
+        }
+
+        .input, .select, .textarea {
+            padding: 8px 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .input:focus, .select:focus, .textarea:focus {
+            border-color: #1890ff;
+            outline: none;
+        }
+
+        .input.error, .select.error, .textarea.error {
+            border-color: #ff4d4f;
+        }
+
+        .error-message {
+            color: #ff4d4f;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .radio {
+            display: flex;
+            align-items: center;
+        }
+
+        .radio input {
+            margin-right: 8px;
+        }
+
+        .toggle {
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+            background-color: #d9d9d9;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle.on {
+            background-color: #1890ff;
+        }
+
+        .toggle-handle {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            transition: left 0.3s;
+        }
+
+        .toggle.on .toggle-handle {
+            left: 22px;
+        }
+
+        .multi-select {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .multi-select-option {
+            padding: 4px 8px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .multi-select-option.selected {
+            background-color: #e6f7ff;
+            border-color: #1890ff;
+        }
+
+        .conditional {
+            display: none;
+        }
+
+        .conditional.visible {
+            display: block;
+        }
+
+        .divider {
+            border-top: 1px solid #f0f0f0;
+            margin: 16px 0;
+        }
+
+        .submit-btn {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #40a9ff;
+        }
+
+        /* Reduce whitespace overall */
+        * {
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h2>Dashboard</h2>
+            <p>Merchant Application</p>
+        </div>
+        <div class="content">
+            <div class="form-container">
+                <h1>Merchant Application Form</h1>
+                <form id="merchant-form">
+                    <!-- Section 1: Business Information -->
+                    <div class="section">
+                        <div class="section-header">Business Information</div>
+                        <div class="form-item">
+                            <label for="business-name">Business Name (Text)</label>
+                            <input type="text" id="business-name" class="input" placeholder="Enter business name">
+                            <div class="error-message" id="business-name-error"></div>
+                        </div>
+                        <div class="form-item">
+                            <label for="business-type">Business Type (Select)</label>
+                            <select id="business-type" class="select">
+                                <option value="">Select type</option>
+                                <option value="retail">Retail</option>
+                                <option value="service">Service</option>
+                                <option value="ecommerce">E-commerce</option>
+                            </select>
+                            <div class="error-message" id="business-type-error"></div>
+                        </div>
+                        <div class="form-item">
+                            <label>Business Categories (Multi-select)</label>
+                            <div class="multi-select" id="business-categories">
+                                <div class="multi-select-option" data-value="food">Food</div>
+                                <div class="multi-select-option" data-value="tech">Tech</div>
+                                <div class="multi-select-option" data-value="health">Health</div>
+                                <div class="multi-select-option" data-value="other">Other</div>
+                            </div>
+                            <div class="error-message" id="business-categories-error"></div>
+                        </div>
+                        <div class="form-item">
+                            <label>Business Size (Radio Button)</label>
+                            <div class="radio-group">
+                                <div class="radio"><input type="radio" name="business-size" value="small"> Small</div>
+                                <div class="radio"><input type="radio" name="business-size" value="medium"> Medium</div>
+                                <div class="radio"><input type="radio" name="business-size" value="large"> Large</div>
+                            </div>
+                            <div class="error-message" id="business-size-error"></div>
+                        </div>
+                        <div class="form-item">
+                            <label for="business-address">Business Address (Address)</label>
+                            <input type="text" id="business-address" class="input" placeholder="Street, City, State, ZIP">
+                            <div class="error-message" id="business-address-error"></div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    <!-- Section 2: Financial Details -->
+                    <div class="section">
+                        <div class="section-header">Financial Details</div>
+                        <div class="form-item">
+                            <label for="annual-revenue">Annual Revenue (Currency)</label>
+                            <input type="text" id="annual-revenue" class="input" placeholder="$0.00">
+                            <div class="error-message" id="annual-revenue-error"></div>
+                        </div>
+                        <div class="form-item">
+                            <label for="profit-margin">Profit Margin (Percentage)</label>
+                            <input type="text" id="profit-margin" class="input" placeholder="0%">
+                            <div class="error-message" id="profit-margin-error"></div>
+                        </div>
+                        <div class="form-item">
+                            <label for="financial-description">Financial Overview (Paragraph)</label>
+                            <textarea id="financial-description" class="textarea" rows="3" placeholder="Describe your financial status"></textarea>
+                            <div class="error-message" id="financial-description-error"></div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    <!-- Section 3: Due Diligence -->
+                    <div class="section">
+                        <div class="section-header">Due Diligence Questions</div>
+                        <div class="form-item">
+                            <label>Compliant with Regulations? (Toggle)</label>
+                            <div class="toggle" id="compliance-toggle">
+                                <div class="toggle-handle"></div>
+                            </div>
+                            <input type="hidden" id="compliance" value="off">
+                        </div>
+                        <div class="form-item">
+                            <label>Have you been involved in any legal disputes? (Radio Button with Conditional)</label>
+                            <div class="radio-group">
+                                <div class="radio"><input type="radio" name="legal-disputes" value="yes" id="legal-yes"> Yes</div>
+                                <div class="radio"><input type="radio" name="legal-disputes" value="no" id="legal-no"> No</div>
+                            </div>
+                            <div class="error-message" id="legal-disputes-error"></div>
+                            <div class="conditional" id="legal-details">
+                                <div class="form-item">
+                                    <label for="legal-description">Describe the disputes (Conditional Paragraph)</label>
+                                    <textarea id="legal-description" class="textarea" rows="3" placeholder="Provide details"></textarea>
+                                    <div class="error-message" id="legal-description-error"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-item">
+                            <label for="documents">Upload Documents (Document)</label>
+                            <input type="file" id="documents" multiple>
+                            <div class="error-message" id="documents-error"></div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    <button type="submit" class="submit-btn">Submit Application</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for interactions and validation
+        document.addEventListener('DOMContentLoaded', () => {
+            // Toggle functionality
+            const toggle = document.getElementById('compliance-toggle');
+            const complianceInput = document.getElementById('compliance');
+            toggle.addEventListener('click', () => {
+                toggle.classList.toggle('on');
+                complianceInput.value = toggle.classList.contains('on') ? 'on' : 'off';
+            });
+
+            // Multi-select functionality
+            const multiSelectOptions = document.querySelectorAll('.multi-select-option');
+            multiSelectOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    option.classList.toggle('selected');
+                });
+            });
+
+            // Conditional field
+            const legalYes = document.getElementById('legal-yes');
+            const legalNo = document.getElementById('legal-no');
+            const legalDetails = document.getElementById('legal-details');
+            [legalYes, legalNo].forEach(radio => {
+                radio.addEventListener('change', () => {
+                    legalDetails.classList.toggle('visible', legalYes.checked);
+                });
+            });
+
+            // Form validation on submit
+            const form = document.getElementById('merchant-form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let valid = true;
+
+                // Clear errors
+                document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+
+                // Validate text input
+                const businessName = document.getElementById('business-name');
+                if (!businessName.value.trim()) {
+                    document.getElementById('business-name-error').textContent = 'Business name is required.';
+                    businessName.classList.add('error');
+                    valid = false;
+                } else {
+                    businessName.classList.remove('error');
+                }
+
+                // Validate select
+                const businessType = document.getElementById('business-type');
+                if (!businessType.value) {
+                    document.getElementById('business-type-error').textContent = 'Business type is required.';
+                    businessType.classList.add('error');
+                    valid = false;
+                } else {
+                    businessType.classList.remove('error');
+                }
+
+                // Validate multi-select (at least one)
+                const selectedCategories = document.querySelectorAll('.multi-select-option.selected');
+                if (selectedCategories.length === 0) {
+                    document.getElementById('business-categories-error').textContent = 'Select at least one category.';
+                    valid = false;
+                }
+
+                // Validate radio
+                const businessSize = document.querySelector('input[name="business-size"]:checked');
+                if (!businessSize) {
+                    document.getElementById('business-size-error').textContent = 'Business size is required.';
+                    valid = false;
+                }
+
+                // Validate address
+                const businessAddress = document.getElementById('business-address');
+                if (!businessAddress.value.trim()) {
+                    document.getElementById('business-address-error').textContent = 'Address is required.';
+                    businessAddress.classList.add('error');
+                    valid = false;
+                } else {
+                    businessAddress.classList.remove('error');
+                }
+
+                // Validate currency (simple number check)
+                const annualRevenue = document.getElementById('annual-revenue');
+                if (!/^\$\d+(\.\d{2})?$/.test(annualRevenue.value)) {
+                    document.getElementById('annual-revenue-error').textContent = 'Enter a valid currency amount.';
+                    annualRevenue.classList.add('error');
+                    valid = false;
+                } else {
+                    annualRevenue.classList.remove('error');
+                }
+
+                // Validate percentage
+                const profitMargin = document.getElementById('profit-margin');
+                if (!/^\d+%$/.test(profitMargin.value)) {
+                    document.getElementById('profit-margin-error').textContent = 'Enter a valid percentage.';
+                    profitMargin.classList.add('error');
+                    valid = false;
+                } else {
+                    profitMargin.classList.remove('error');
+                }
+
+                // Validate paragraph
+                const financialDesc = document.getElementById('financial-description');
+                if (!financialDesc.value.trim()) {
+                    document.getElementById('financial-description-error').textContent = 'Financial overview is required.';
+                    financialDesc.classList.add('error');
+                    valid = false;
+                } else {
+                    financialDesc.classList.remove('error');
+                }
+
+                // Validate legal disputes radio
+                const legalDisputes = document.querySelector('input[name="legal-disputes"]:checked');
+                if (!legalDisputes) {
+                    document.getElementById('legal-disputes-error').textContent = 'This field is required.';
+                    valid = false;
+                } else if (legalDisputes.value === 'yes') {
+                    const legalDesc = document.getElementById('legal-description');
+                    if (!legalDesc.value.trim()) {
+                        document.getElementById('legal-description-error').textContent = 'Details are required if yes.';
+                        legalDesc.classList.add('error');
+                        valid = false;
+                    } else {
+                        legalDesc.classList.remove('error');
+                    }
+                }
+
+                // Validate documents (at least one file)
+                const documents = document.getElementById('documents');
+                if (documents.files.length === 0) {
+                    document.getElementById('documents-error').textContent = 'At least one document is required.';
+                    valid = false;
+                }
+
+                if (valid) {
+                    alert('Form submitted successfully!');
+                    // Here you could handle form data submission
+                }
+            });
+        });
+    </script>
+</body>
+</html>

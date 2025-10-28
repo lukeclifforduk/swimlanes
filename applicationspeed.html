@@ -5,35 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web App Mockup</title>
     <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --text-color: #000;
+            --drawer-bg: white;
+            --table-bg: #fafafa;
+            --table-border: #f0f0f0;
+            --btn-bg: #1890ff;
+            --btn-hover: #40a9ff;
+            --close-color: #000;
+            --close-hover: #1890ff;
+            --bar-bg: #f0f0f0;
+            --even-row: transparent;
+        }
+        body.dark-mode {
+            --bg-color: #121212;
+            --text-color: #fff;
+            --drawer-bg: #1e1e1e;
+            --table-bg: #2a2a2a;
+            --table-border: #333;
+            --btn-bg: #177ddc;
+            --btn-hover: #388ed3;
+            --close-color: #fff;
+            --close-hover: #388ed3;
+            --bar-bg: #333;
+            --even-row: #1e1e1e;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: #f0f2f5;
+            background: var(--bg-color);
+            color: var(--text-color);
         }
         #home {
             padding: 20px;
             text-align: center;
+            transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+        }
+        body.drawer-open #home {
+            width: calc(100% - 600px);
+            margin-left: calc((100% - 600px) / 2 - 300px);
+            position: absolute;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .ant-btn {
-            background: #1890ff;
+            background: var(--btn-bg);
             color: white;
             border: none;
             padding: 8px 16px;
             cursor: pointer;
             border-radius: 4px;
             font-size: 14px;
+            margin: 10px;
         }
         .ant-btn:hover {
-            background: #40a9ff;
+            background: var(--btn-hover);
         }
         .drawer {
             position: fixed;
             top: 0;
-            right: -400px;
-            width: 400px;
+            right: -600px;
+            width: 600px;
             height: 100%;
-            background: white;
+            background: var(--drawer-bg);
             box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
             transition: right 0.3s ease-in-out;
             z-index: 1000;
@@ -46,33 +86,53 @@
             padding: 16px;
             position: relative;
         }
-        .close-btn {
+        .collapse-icon {
+            display: none;
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 18px;
+            left: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--drawer-bg);
+            padding: 10px 5px;
+            border: 1px solid var(--table-border);
+            border-right: none;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
             cursor: pointer;
-            color: #000;
+            font-size: 18px;
+            color: var(--text-color);
         }
-        .close-btn:hover {
-            color: #1890ff;
+        .drawer.open .collapse-icon {
+            display: block;
+        }
+        .collapse-icon:hover {
+            background: var(--table-bg);
+        }
+        .close-x {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--close-color);
+        }
+        .close-x:hover {
+            color: var(--close-hover);
         }
         .ant-table {
             width: 100%;
             border-collapse: collapse;
-            border: 1px solid #f0f0f0;
+            border: 1px solid var(--table-border);
         }
         .ant-table th,
         .ant-table td {
-            border: 1px solid #f0f0f0;
+            border: 1px solid var(--table-border);
             padding: 12px 8px;
             text-align: left;
             font-size: 14px;
         }
         .ant-table th {
-            background: #fafafa;
+            background: var(--table-bg);
             font-weight: 500;
         }
         .ant-table td.center {
@@ -89,8 +149,8 @@
         .tooltip .tooltiptext {
             visibility: hidden;
             width: 220px;
-            background-color: white;
-            color: #000;
+            background-color: var(--drawer-bg);
+            color: var(--text-color);
             text-align: left;
             border-radius: 4px;
             padding: 8px 12px;
@@ -111,7 +171,7 @@
             margin-left: -5px;
             border-width: 5px;
             border-style: solid;
-            border-color: white transparent transparent transparent;
+            border-color: var(--drawer-bg) transparent transparent transparent;
         }
         .tooltip:hover .tooltiptext {
             visibility: visible;
@@ -125,16 +185,137 @@
         .neutral {
             color: #fa8c16;
         }
+        .ant-table tbody tr:nth-child(even) {
+            background: var(--even-row);
+        }
+        .ant-table th:first-child, .ant-table td:first-child {
+            width: 200px;
+        }
+        .ant-table th:last-child, .ant-table td:last-child {
+            width: 350px;
+            position: relative;
+        }
+        .ant-table td:last-child::before {
+            content: '';
+            position: absolute;
+            left: 220px;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            border-left: 1px dashed var(--text-color);
+            z-index: 0;
+        }
+        .performance {
+            display: flex;
+            flex-direction: column;
+        }
+        .bar-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            border-bottom: 1px solid var(--table-border);
+            padding-bottom: 5px;
+        }
+        .bar-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .bar-label {
+            width: 80px;
+            text-align: right;
+            margin-right: 10px;
+            font-size: 12px;
+        }
+        .bar-container {
+            width: 260px;
+            position: relative;
+            height: 10px;
+        }
+        .bar-background {
+            position: absolute;
+            left: 0;
+            top: 4px;
+            width: 100%;
+            height: 3px;
+            background: var(--bar-bg);
+            z-index: 1;
+        }
+        .bar-fill {
+            position: absolute;
+            top: 4px;
+            height: 3px;
+            z-index: 1;
+            left: 0;
+        }
+        /* Switch styles */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .toggle-text {
+            margin-left: 10px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
     <div id="home">
         <h1>Home Page</h1>
-        <button class="ant-btn" onclick="openDrawer()">Open Drawer</button>
+        <button class="ant-btn" onclick="openTrafficDrawer()">Open Traffic Lights</button>
+        <button class="ant-btn" onclick="openAverageDrawer()">Open Average Bars</button>
+        <div class="toggle-label">
+            <label class="switch">
+                <input type="checkbox" onchange="toggleDarkMode(this)">
+                <span class="slider"></span>
+            </label>
+            <span class="toggle-text">Dark Mode</span>
+        </div>
     </div>
-    <div id="drawer" class="drawer">
+    <div id="traffic-drawer" class="drawer">
         <div class="drawer-content">
-            <button class="close-btn" onclick="closeDrawer()">×</button>
+            <div class="close-x" onclick="closeTrafficDrawer()">×</div>
+            <div class="collapse-icon" onclick="closeTrafficDrawer()">&rarr;</div>
             <table class="ant-table">
                 <thead>
                     <tr>
@@ -238,19 +419,646 @@
                     <tr>
                         <td>Active Merchant</td>
                         <td class="center"><div class="tooltip"><span class="circle">🟢</span><span class="tooltiptext">Application Stage Speed: 0 minutes<br>Average Stage Speed: 10 minutes<br><span class="green">100% faster</span></span></div></td>
-                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 0 minutes<br>Average Stage Speed: 0 minutes<br><span class="neutral">0% (same)</span></span></div></td>
-                        <td class="center"><div class="tooltip"><span class="circle">🔴</span><span class="tooltiptext">Application Stage Speed: 0 minutes<br>Average Stage Speed: 0 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 0 minutes<br>Average Stage Speed: 0 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                        <td class="center"><div class="tooltip"><span class="circle">🟠</span><span class="tooltiptext">Application Stage Speed: 0 minutes<br>Average Stage Speed: 0 minutes<br><span class="neutral">0% (same)</span></span></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="average-drawer" class="drawer">
+        <div class="drawer-content">
+            <div class="close-x" onclick="closeAverageDrawer()">×</div>
+            <div class="collapse-icon" onclick="closeAverageDrawer()">&rarr;</div>
+            <table class="ant-table">
+                <thead>
+                    <tr>
+                        <th>Stage</th>
+                        <th>Performance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>IVR Screening</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 33.5%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 10 minutes<br>Average Stage Speed: 15 minutes<br><span class="green">33% faster</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 10 minutes<br>Average Stage Speed: 10 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 25%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 10 minutes<br>Average Stage Speed: 20 minutes<br><span class="green">50% faster</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Product Selection</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 21%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 5 minutes<br>Average Stage Speed: 12 minutes<br><span class="green">58% faster</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 5 minutes<br>Average Stage Speed: 5 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 25%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 5 minutes<br>Average Stage Speed: 10 minutes<br><span class="green">50% faster</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Related Entities</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 94%; background: red;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 15 minutes<br>Average Stage Speed: 8 minutes<br><span class="red">88% slower</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 15 minutes<br>Average Stage Speed: 15 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 62.5%; background: red;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 15 minutes<br>Average Stage Speed: 12 minutes<br><span class="red">25% slower</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Product Assignment</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 40%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 120 minutes<br>Average Stage Speed: 150 minutes<br><span class="green">20% faster</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 66.5%; background: red;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 120 minutes<br>Average Stage Speed: 90 minutes<br><span class="red">33% slower</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 120 minutes<br>Average Stage Speed: 120 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Merchant Application Questions</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 33.5%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 20 minutes<br>Average Stage Speed: 30 minutes<br><span class="green">33% faster</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 20 minutes<br>Average Stage Speed: 20 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 25%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 20 minutes<br>Average Stage Speed: 40 minutes<br><span class="green">50% faster</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Summary Page</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 26.5%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 8 minutes<br>Average Stage Speed: 15 minutes<br><span class="green">47% faster</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 66.5%; background: red;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 8 minutes<br>Average Stage Speed: 6 minutes<br><span class="red">33% slower</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 80%; background: red;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 8 minutes<br>Average Stage Speed: 5 minutes<br><span class="red">60% slower</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Contract Sent</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 15%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 3 minutes<br>Average Stage Speed: 10 minutes<br><span class="green">70% faster</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 3 minutes<br>Average Stage Speed: 3 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 18.5%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 3 minutes<br>Average Stage Speed: 8 minutes<br><span class="green">63% faster</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Contract Received</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 22%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 4 minutes<br>Average Stage Speed: 9 minutes<br><span class="green">56% faster</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 4 minutes<br>Average Stage Speed: 4 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 4 minutes<br>Average Stage Speed: 4 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Third Party Checks Started</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 25%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 6 minutes<br>Average Stage Speed: 12 minutes<br><span class="green">50% faster</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 75%; background: red;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 6 minutes<br>Average Stage Speed: 4 minutes<br><span class="red">50% slower</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 100%; background: red;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 6 minutes<br>Average Stage Speed: 3 minutes<br><span class="red">100% slower</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Third Party Checks Completed</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 87.5%; background: red;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 7 minutes<br>Average Stage Speed: 4 minutes<br><span class="red">75% slower</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 7 minutes<br>Average Stage Speed: 7 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 7 minutes<br>Average Stage Speed: 7 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Approval Decision Taken</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 22.5%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 5 minutes<br>Average Stage Speed: 11 minutes<br><span class="green">55% faster</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 83.5%; background: red;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 5 minutes<br>Average Stage Speed: 3 minutes<br><span class="red">67% slower</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 62.5%; background: red;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 5 minutes<br>Average Stage Speed: 4 minutes<br><span class="red">25% slower</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Merchant ID On File</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 16.5%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 2 minutes<br>Average Stage Speed: 6 minutes<br><span class="green">67% faster</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 2 minutes<br>Average Stage Speed: 2 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 20%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 2 minutes<br>Average Stage Speed: 5 minutes<br><span class="green">60% faster</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EIT Triggered</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 25%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 4 minutes<br>Average Stage Speed: 8 minutes<br><span class="green">50% faster</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 4 minutes<br>Average Stage Speed: 4 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 22%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 4 minutes<br>Average Stage Speed: 9 minutes<br><span class="green">56% faster</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Product Shipped</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 33.5%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 30 minutes<br>Average Stage Speed: 45 minutes<br><span class="green">33% faster</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 75%; background: red;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 30 minutes<br>Average Stage Speed: 20 minutes<br><span class="red">50% slower</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 60%; background: red;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 30 minutes<br>Average Stage Speed: 25 minutes<br><span class="red">20% slower</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Product Arrived</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 75%; background: red;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 60 minutes<br>Average Stage Speed: 40 minutes<br><span class="red">50% slower</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 60 minutes<br>Average Stage Speed: 60 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 60 minutes<br>Average Stage Speed: 60 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Active Merchant</td>
+                        <td>
+                            <div class="performance">
+                                <div class="bar-row">
+                                    <span class="bar-label">Agent</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 0%; background: green;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 0 minutes<br>Average Stage Speed: 10 minutes<br><span class="green">100% faster</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Partner</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 0 minutes<br>Average Stage Speed: 0 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Global</span>
+                                    <div class="tooltip">
+                                        <div class="bar-container">
+                                            <div class="bar-background"></div>
+                                            <div class="bar-fill" style="width: 50%; background: #fa8c16;"></div>
+                                        </div>
+                                        <span class="tooltiptext">Application Stage Speed: 0 minutes<br>Average Stage Speed: 0 minutes<br><span class="neutral">0% (same)</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
     <script>
-        function openDrawer() {
-            document.getElementById('drawer').classList.add('open');
+        function openTrafficDrawer() {
+            closeAverageDrawer();
+            document.getElementById('traffic-drawer').classList.add('open');
+            document.body.classList.add('drawer-open');
         }
-        function closeDrawer() {
-            document.getElementById('drawer').classList.remove('open');
+        function closeTrafficDrawer() {
+            document.getElementById('traffic-drawer').classList.remove('open');
+            document.body.classList.remove('drawer-open');
+        }
+        function openAverageDrawer() {
+            closeTrafficDrawer();
+            document.getElementById('average-drawer').classList.add('open');
+            document.body.classList.add('drawer-open');
+        }
+        function closeAverageDrawer() {
+            document.getElementById('average-drawer').classList.remove('open');
+            document.body.classList.remove('drawer-open');
+        }
+        function toggleDarkMode(checkbox) {
+            if (checkbox.checked) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
         }
     </script>
 </body>
